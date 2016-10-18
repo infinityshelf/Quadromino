@@ -20,27 +20,38 @@ void TetrisPiece::setType(TetronimoType type) {
 }
 
 void TetrisPiece::moveLeft() {
-    this->x -= pixels;
+    this->updatePosition(this->x - pixels, this->y);
 }
 
 void TetrisPiece::moveRight() {
-    this->x += pixels;
+    this->updatePosition(this->x + pixels, this->y);
 }
 
 void TetrisPiece::moveDown() {
-    this->y += pixels;
+    this->updatePosition(this->x, this->y + pixels);
 }
 
 void TetrisPiece::updatePosition(int x, int y) {
+    // delta x, delta y
+    int dx = x - this->x, dy = y - this->y;
     this->x = x;
     this->y = y;
     if (wrap) {
         //this->y = this->y % windowHeight;
     }
-    this->setShapeForType();
+    for (int i = 0; i < 4; i++) {
+        // xr and yr are rectangle positions
+        int rect_x, rect_y;
+        const sf::Vector2<float> pos = this->rectShapes[i].getPosition();
+        rect_x = pos.x + dx;
+        rect_y = pos.y + dy;
+        this->rectShapes[i].setPosition(rect_x, rect_y);
+    }
 }
 
 void TetrisPiece::updatePosition() {
+    // if this->x or this->y have been changed directly
+    // then updatePosition() should recalculate the positions of all the rectangles
     this->setShapeForType();
 }
 

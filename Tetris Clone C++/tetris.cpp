@@ -47,7 +47,7 @@ int main()
             frameCounter %= 60;
             piece.moveDown();
         }
-        piece.updatePosition();
+        // piece.updatePosition();
         piece.draw();
         window.display();
     }

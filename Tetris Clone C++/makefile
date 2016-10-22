@@ -2,7 +2,7 @@ CFLAGS = -Wall
 
 all: main.o TetrisPiece.o GridController.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
-	./Tetris
+	./Tetris.exe
 
 main.o: main.cpp TetrisPiece.hpp GridController.hpp
 	g++ $(CFLAGS) -c main.cpp

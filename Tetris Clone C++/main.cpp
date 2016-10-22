@@ -23,7 +23,7 @@ int main()
     piece.updatePosition(0,0);
     piece.setType(TETRONIMO_TYPE_Z);
     bool autoDrop = true;
-    bool spawnPiece = false;
+    // bool spawnPiece = false;
     while (window.isOpen()) {
         frameCounter++;
         //(debug) ? cout << "frame: \n" << frameCounter : NULL;
@@ -59,14 +59,14 @@ int main()
                 }
             }
         }
-        if (piece.row >= 18) {
-            // piece.destroy();
-            spawnPiece = true;
-        }
-        if (spawnPiece) {
-            piece = TetrisPiece();
-            spawnPiece = false;
-        }
+        // if (piece.row >= 18) {
+        //     // piece.destroy();
+        //     spawnPiece = true;
+        // }
+        // if (spawnPiece) {
+        //     piece = TetrisPiece();
+        //     spawnPiece = false;
+        // }
         window.clear();
         if (frameCounter % 60 == 59) {
             frameCounter %= 60;

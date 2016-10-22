@@ -7,9 +7,11 @@ extern const bool debug;
 extern const int pixels;
 extern const int rows;
 extern const int columns;
+class TetrisPiece;
 class GridController
 {
 private:
+    TetrisPiece *pieces;
     bool grid[10][22];
     static GridController *s_instance;
     GridController();

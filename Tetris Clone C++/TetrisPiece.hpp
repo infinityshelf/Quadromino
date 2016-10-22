@@ -1,8 +1,10 @@
-#ifndef TETRISPIECE_H
-#define TETRISPIECE_H
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#ifndef TETRISPIECE_H
+#define TETRISPIECE_H
 #include "GridController.hpp"
+class GridController;
 
 enum TETRONIMO_TYPES
 {
@@ -19,17 +21,21 @@ typedef enum TETRONIMO_TYPES TetronimoType;
 class TetrisPiece
 {
 private:
+    GridController &m_gridController;
     int x, y, col, row;
     bool grid[4][4];
     sf::RenderWindow &m_windowRef;
+    GridController *nullable_m_gridController;
     sf::Color color;
     void setShapeForType(TetronimoType tetronimoType);
     TetronimoType type;
     void updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape);
 public:
+    ~TetrisPiece(){};
     sf::RectangleShape rectShapes[4];
     sf::RectangleShape bbox;
-    TetrisPiece(sf::RenderWindow &windowRef): m_windowRef(windowRef){};
+    TetrisPiece(TetrisPiece const&);
+    TetrisPiece(GridController &gridController, sf::RenderWindow &windowRef);
     void setType(TetronimoType type);
     void moveLeft();
     void moveRight();

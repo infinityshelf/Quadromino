@@ -10,11 +10,15 @@ const int columns = 10;
 
 GridController& GridController::instance() {
     static GridController instance;
-    std::cout << "instance pointer = " << &instance;
+    std::cout << "instance pointer = " << &instance << std::endl;
     return instance;
 }
 
-GridController::GridController() {}
+GridController::GridController() {
+    // for (int i = 0; i < rows*columns; i++) {
+    //     this->grid[0][i] = false;
+    // }
+}
 
 GridController::~GridController() {}
 
@@ -23,14 +27,20 @@ bool GridController::isSpaceOccupied(int row, int col) {
 }
 
 void GridController::setSpaceOccupied(int row, int col, bool occupied) {
-    this->grid[col][row] = occupied;
+    if (row >= 0 && row < rows && col >= 0 && col < columns) {
+        this->grid[col][row] = occupied;
+    }
+    this->printGrid();
 }
 
 void GridController::printGrid() {
-    for (int i = 0; i < columns*rows; i++) {
-        std::cout << this->grid[0][i] << " ";
-        if (i % 5 == 4) {
-            std::cout << std::endl;
+    std::cout << "~~~~~~~~~~" << std::endl;
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < columns; col++) {
+            std::cout << ((this->grid[col][row]) ? "@" : "_");
+            if (col % 10 == 9) {
+                std::cout << std::endl;
+            }
         }
     }
 }

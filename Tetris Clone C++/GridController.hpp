@@ -12,12 +12,15 @@ class GridController
 private:
     bool grid[10][22];
     static GridController *s_instance;
+    static sf::RenderWindow * m_windowref;
     GridController();
     GridController(GridController const&);
     void operator=(GridController const&);
 public:
     ~GridController();
-    static GridController& instance(); 
+    static GridController* instance();
+    sf::RenderWindow * window_instance();
+    void provideWindow(sf::RenderWindow * window);
     void printGrid();
     void setSpaceOccupied(int row, int col, bool occupied);
     bool isSpaceOccupied(int row, int col);

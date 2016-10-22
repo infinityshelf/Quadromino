@@ -8,10 +8,13 @@ const int pixels = 32.0f;
 const int rows = 22;
 const int columns = 10;
 
-GridController& GridController::instance() {
+GridController * GridController::s_instance = nullptr;
+sf::RenderWindow * GridController::m_windowref = nullptr;
+
+GridController* GridController::instance() {
     static GridController instance;
     std::cout << "instance pointer = " << &instance;
-    return instance;
+    return &instance;
 }
 
 GridController::GridController() {}
@@ -33,4 +36,12 @@ void GridController::printGrid() {
             std::cout << std::endl;
         }
     }
+}
+
+void GridController::provideWindow(sf::RenderWindow * window) {
+    this->m_windowref = window;
+}
+
+sf::RenderWindow * GridController::window_instance() {
+    return this->m_windowref;
 }

@@ -1,5 +1,8 @@
 #include "TetrisPiece.hpp"
+#include "GridController.hpp"
 #include <iostream>
+
+// class GridController;
 
 const bool wrap = true;
 
@@ -10,6 +13,14 @@ const uint16_t kGRID_J = 0b0000001000100110;
 const uint16_t kGRID_S = 0b0000010001100010;
 const uint16_t kGRID_Z = 0b0000001001100100;
 const uint16_t kGRID_T = 0b0000001001110000;
+
+sf::RenderWindow* TetrisPiece::m_windowRef = nullptr;
+GridController* TetrisPiece::m_gridController = nullptr;
+
+TetrisPiece::TetrisPiece() {
+    this->m_gridController = GridController::instance();
+    this->m_windowRef = this->m_gridController->window_instance();
+}
 
 void TetrisPiece::setType(TetronimoType type) {
     this->type = type;
@@ -63,9 +74,9 @@ void TetrisPiece::updatePosition() {
 
 void TetrisPiece::draw() {
     for (int i = 0; i < 4; i++) {
-        this->m_windowRef.draw(this->rectShapes[i]);
+        this->m_windowRef->draw(this->rectShapes[i]);
     }
-    this->m_windowRef.draw(this->bbox);
+    this->m_windowRef->draw(this->bbox);
 }
 
 void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
@@ -176,3 +187,10 @@ void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
         std::cout << "grid " << i << " = " << (int) grid[0][j] << std::endl;
     }
 }
+
+// void TetrisPiece::destroy() {
+//     // delete this->bbox;
+//     for (int i = 0; i < 4; i++) {
+//         // delete this->rectShapes[i];
+//     }
+// }

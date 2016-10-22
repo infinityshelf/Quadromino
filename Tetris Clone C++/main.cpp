@@ -10,17 +10,20 @@ using namespace std;
 
 int main()
 {
-    /* code */
-    cout << "size of uint8_t" << sizeof(uint8_t) << endl;
+    // cout << "size of uint8_t" << sizeof(uint8_t) << endl;
     int frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
-    static GridController &mainGrid = GridController::instance();
-    mainGrid.printGrid();
+    static GridController *mainGrid = GridController::instance();
+    mainGrid->provideWindow(&window);
+    mainGrid->printGrid();
     window.setFramerateLimit(60);
-    TetrisPiece piece(window);
+    TetrisPiece piece;
+    // piece.provideGridController(mainGrid);
+    // piece.provideWindow(&window);
     piece.updatePosition(0,0);
     piece.setType(TETRONIMO_TYPE_Z);
     bool autoDrop = true;
+    bool spawnPiece = false;
     while (window.isOpen()) {
         frameCounter++;
         //(debug) ? cout << "frame: \n" << frameCounter : NULL;
@@ -44,6 +47,10 @@ int main()
                     if (event.key.code == sf::Keyboard::Down) {
                         autoDrop = false;
                         piece.moveDown();
+                        // frame counter to 0 to make it so that
+                        // when the player presses down and their piece moves down
+                        // it takes a second for the piece to move again automatically
+                        frameCounter = 0;
                     }
                 }
             } else if (event.type == sf::Event::KeyReleased) {
@@ -51,6 +58,14 @@ int main()
                     autoDrop = true;
                 }
             }
+        }
+        if (piece.row >= 18) {
+            // piece.destroy();
+            spawnPiece = true;
+        }
+        if (spawnPiece) {
+            piece = TetrisPiece();
+            spawnPiece = false;
         }
         window.clear();
         if (frameCounter % 60 == 59) {

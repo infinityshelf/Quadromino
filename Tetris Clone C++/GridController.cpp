@@ -33,19 +33,23 @@ void GridController::setSpaceOccupied(int row, int col, bool occupied) {
     if (row >= 0 && row < rows && col >= 0 && col < columns) {
         this->grid[col][row] = occupied;
     }
-    this->printGrid();
+    //this->printGrid();
 }
 
 void GridController::printGrid() {
-    std::cout << "~~~~~~~~~~" << std::endl;
+    std::cout << std::endl;
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < columns; col++) {
-            std::cout << ((this->grid[col][row]) ? "@" : "_");
-            if (col % 10 == 9) {
-                std::cout << std::endl;
+            if (col == 0) {
+                std::cout << "|";
+            }
+            std::cout << ((this->grid[col][row]) ? "$" : "_");
+            if (col == 9) {
+                std::cout << "|" << std::endl;
             }
         }
     }
+    std::cout << std::endl;
 }
 
 void GridController::provideWindow(sf::RenderWindow * window) {

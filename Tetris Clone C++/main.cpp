@@ -9,7 +9,6 @@ using namespace std;
 
 int main()
 {
-    // cout << "size of uint8_t" << sizeof(uint8_t) << endl;
     int frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     static GridController *mainGrid = GridController::instance();
@@ -17,8 +16,6 @@ int main()
     mainGrid->printGrid();
     window.setFramerateLimit(60);
     TetrisPiece piece;
-    // piece.provideGridController(mainGrid);
-    // piece.provideWindow(&window);
     piece.updatePosition(0,0);
     piece.setType(TETRONIMO_TYPE_Z);
     
@@ -59,11 +56,12 @@ int main()
             }
         }
         // if (piece.row >= 18) {
-        //     // piece.destroy();
         //     spawnPiece = true;
         // }
         // if (spawnPiece) {
-        //     piece = TetrisPiece();
+        //     piece.stick();
+        //     TetronimoType nextpiece = mainGrid->queue->peek();
+        //     piece.reset_with_type(nextpiece);
         //     spawnPiece = false;
         // }
         window.clear();

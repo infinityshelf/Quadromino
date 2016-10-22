@@ -2,10 +2,7 @@
 #include "GridController.hpp"
 #include <iostream>
 
-// class GridController;
-
-const bool wrap = true;
-
+const uint16_t kGRID_NONE = 0b0000000000000000;
 const uint16_t kGRID_O = 0b0000011001100000;
 const uint16_t kGRID_I = 0b0000111100000000;
 const uint16_t kGRID_L = 0b0000010001000110;
@@ -36,21 +33,38 @@ void TetrisPiece::moveRight() {
 }
 
 void TetrisPiece::moveDown() {
-    this->updatePosition(this->col, this->row+1);
+    bool canMoveDown = true;
+    canMoveDown = this->offsetFree(0, 1);
+    std::cout << "canMoveDown: " << canMoveDown << std::endl;
+    if (canMoveDown) {
+        this->updatePosition(this->col, this->row+1);
+    }
+}
+
+bool TetrisPiece::offsetFree(int col_off, int row_off) {
+    bool free = true;
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 4; col++) {
+            if (this->grid[row][col]) {
+                std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+                if (this->m_gridController->isSpaceOccupied(this->row+row+row_off, this->col+col+col_off)) {
+                    free = false;
+                    std::cout << "ugh";
+                    break;
+                }
+            }
+        }
+    }
+    return free;
 }
 
 void TetrisPiece::updatePosition(int col, int row) {
     int x = col * pixels, y = row * pixels;
     this->row = row;
     this->col = col;
-    //std::cout << this << " row: " << this->row << ", col: " << this->col << std::endl;
-    // delta x, delta y
     int dx = x - this->x, dy = y - this->y;
     this->x = x;
     this->y = y;
-    if (wrap) {
-        //this->y = this->y % windowHeight;
-    }
     for (int i = 0; i < 4; i++) {
         // xr and yr are rectangle positions
         this->updateRectUsingDelta(dx, dy, this->rectShapes[i]);
@@ -62,9 +76,13 @@ void TetrisPiece::updatePosition(int col, int row) {
             int global_row = this->row+row;
             int global_col = this->col+col;
             bool occupied = this->grid[row][col];
-            this->m_gridController->setSpaceOccupied(global_row,global_col,occupied);
+            //this->m_gridController->setSpaceOccupied(global_row,global_col,occupied);
         }
     }
+}
+
+void TetrisPiece::stick() {
+    
 }
 
 void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
@@ -91,6 +109,8 @@ void TetrisPiece::draw() {
 void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
     sf::Vector2f square = sf::Vector2f(pixels, pixels);
     switch(tetronimoType) {
+        case TETRONIMO_TYPE_NONE:
+        break;
         case TETRONIMO_TYPE_O: {
             this->color = sf::Color(0xFF0000FF);
         }
@@ -147,7 +167,7 @@ void TetrisPiece::printGrid() {
         if (i % 4 == 0) {
             std::cout << "|";
         }
-        std::cout << ((this->grid[0][i]) ? "#":" ");
+        std::cout << ((this->grid[0][i]) ? "@":" ");
         if (i % 4 == 3) {
             std::cout << "|" << std::endl;
         }
@@ -158,6 +178,10 @@ void TetrisPiece::printGrid() {
 void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
     uint16_t type;
     switch(tetronimoType) {
+        case TETRONIMO_TYPE_NONE: {
+            type = 0;
+        }
+        break;
         case TETRONIMO_TYPE_O: {
             type = kGRID_O;
         }

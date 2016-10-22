@@ -4,12 +4,12 @@
 #ifndef TETRISPIECE_H
 #define TETRISPIECE_H
 #include "GridController.hpp"
-class GridController;
 
 class GridController;
 
 enum TETRONIMO_TYPES
 {
+    TETRONIMO_TYPE_NONE,
     TETRONIMO_TYPE_O,
     TETRONIMO_TYPE_T,
     TETRONIMO_TYPE_I,
@@ -30,14 +30,13 @@ private:
     void setShapeForType(TetronimoType tetronimoType);
     TetronimoType type;
     void updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape);
+    bool offsetFree(int col_off, int row_off);
 public:
     int x, y, col, row;
     sf::RectangleShape rectShapes[4];
     sf::RectangleShape bbox;
-    // TetrisPiece(sf::RenderWindow &windowRef): m_windowRef(windowRef){};
     TetrisPiece();
-    // void provideWindow(sf::RenderWindow * windowRef);
-    // void provideGridController(GridController * gridController);
+    void stick();
     void setType(TetronimoType type);
     void moveLeft();
     void moveRight();

@@ -7,12 +7,15 @@ extern const bool debug;
 extern const int pixels;
 extern const int rows;
 extern const int columns;
+
 class TetrisPiece;
-class GridController
-{
+
+// typedef enum TETRONIMO_TYPES TetronimoType;
+
+class GridController {
 private:
-    TetrisPiece *pieces;
-    bool grid[10][22];
+    // TetrisPiece *pieces;
+    TetronimoType grid[22][10];
     static GridController *s_instance;
     static sf::RenderWindow * m_windowref;
     GridController();
@@ -24,7 +27,7 @@ public:
     sf::RenderWindow * window_instance();
     void provideWindow(sf::RenderWindow * window);
     void printGrid();
-    void setSpaceOccupied(int row, int col, bool occupied);
+    void setSpaceOccupied(int row, int col, TetronimoType type);
     bool isSpaceOccupied(int row, int col);
 };
 #endif

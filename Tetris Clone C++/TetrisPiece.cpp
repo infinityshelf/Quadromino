@@ -2,19 +2,37 @@
 #include "GridController.hpp"
 #include <iostream>
 
-const uint16_t kGRID_NONE = 0b0000000000000000;
-const uint16_t kGRID_O = 0b0000011001100000;
-const uint16_t kGRID_I = 0b0000111100000000;
-const uint16_t kGRID_L = 0b0000010001000110;
-const uint16_t kGRID_J = 0b0000001000100110;
-const uint16_t kGRID_S = 0b0000010001100010;
-const uint16_t kGRID_Z = 0b0000001001100100;
-const uint16_t kGRID_T = 0b0000001001110000;
+// const uint16_t kGRID_NONE = 0b0000000000000000;
+const uint16_t kGRID_NONE = 0x0000;
+//                          0x   0   0   0   0;
+// const uint16_t kGRID_O = 0b0000011001100000;
+const uint16_t kGRID_O = 0x0660;
+//                       0x   0   6   6   0
+// const char kGRID_J[17] = '______1___1__11_';
+// const uint16_t kGRID_I = 0b0000111100000000;
+const uint16_t kGRID_I = 0x0F00;
+//                       0x   0   F   0   0
+// const uint16_t kGRID_L = 0b0000010001000110;
+const uint16_t kGRID_L = 0x0446;
+//                       0x   0   4   4   6
+// const uint16_t kGRID_J = 0b0000001000100110;
+const uint16_t kGRID_J = 0x0226;
+//                       0x   0   2   2   6
+// const uint16_t kGRID_S = 0b0000010001100010;
+const uint16_t kGRID_S = 0x0462;
+//                       0x   0   4   6   2
+// const uint16_t kGRID_Z = 0b0000001001100100;
+const uint16_t kGRID_Z = 0x0264;
+// const uint16_t kGRID_T = 0b0000001001110000;
+const uint16_t kGRID_T = 0x0270;
 
 sf::RenderWindow* TetrisPiece::m_windowRef = nullptr;
 GridController* TetrisPiece::m_gridController = nullptr;
+TetronimoType TetrisPiece::type = TETRONIMO_TYPE_I;
+sf::RectangleShape TetrisPiece::bbox = sf::RectangleShape();
+sf::Color TetrisPiece::color = sf::Color(0xFFFFFFFF);
 
-TetrisPiece::TetrisPiece() {
+TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
     this->m_gridController = GridController::instance();
     this->m_windowRef = this->m_gridController->window_instance();
 }
@@ -43,11 +61,11 @@ void TetrisPiece::moveDown() {
 
 bool TetrisPiece::offsetFree(int col_off, int row_off) {
     bool free = true;
-    for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 4; col++) {
+    for (int col = 0; col < 4; col++) {
+        for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
                 std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
-                if (this->m_gridController->isSpaceOccupied(this->row+row+row_off, this->col+col+col_off)) {
+                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off)) {
                     free = false;
                     std::cout << "ugh";
                     break;
@@ -70,19 +88,31 @@ void TetrisPiece::updatePosition(int col, int row) {
         this->updateRectUsingDelta(dx, dy, this->rectShapes[i]);
     }
     this->updateRectUsingDelta(dx, dy, this->bbox);
-    for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 4; ++col) {
-            //this->printGrid();
-            int global_row = this->row+row;
-            int global_col = this->col+col;
-            bool occupied = this->grid[row][col];
-            //this->m_gridController->setSpaceOccupied(global_row,global_col,occupied);
-        }
-    }
+    // for (int row = 0; row < 4; row++) {
+    //     for (int col = 0; col < 4; ++col) {
+    //         //this->printGrid();
+    //         // int global_row = this->row+row;
+    //         // int global_col = this->col+col;
+    //         // bool occupied = this->grid[row][col];
+    //         //this->m_gridController->setSpaceOccupied(global_row,global_col,occupied);
+    //     }
+    // }
+    this->m_gridController->printGrid();
 }
 
 void TetrisPiece::stick() {
-    
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 4; ++col) {
+            // this->printGrid();
+            // reminder col is x and row is y
+            int global_row = this->row+row;
+            int global_col = this->col+col;
+            bool occupied = this->grid[row][col];
+            if (occupied) {
+                this->m_gridController->setSpaceOccupied(global_col,global_row,this->type);
+            }
+        }
+    }
 }
 
 void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
@@ -96,6 +126,8 @@ void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape
 void TetrisPiece::updatePosition() {
     // if this->x or this->y have been changed directly
     // then updatePosition() should recalculate the positions of all the rectangles
+    // this->m_gridController->printGrid();
+    std::cerr << "update position without arguments" << std::endl;
     this->setShapeForType(this->type);
 }
 
@@ -110,35 +142,39 @@ void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
     sf::Vector2f square = sf::Vector2f(pixels, pixels);
     switch(tetronimoType) {
         case TETRONIMO_TYPE_NONE:
-        break;
+            break;
         case TETRONIMO_TYPE_O: {
             this->color = sf::Color(0xFF0000FF);
+            break;
         }
-        break;
         case TETRONIMO_TYPE_I: {
             this->color = sf::Color(0xFFFF00FF);
+            break;
         }
-        break;
         case TETRONIMO_TYPE_L: {
             this->color = sf::Color(0xFF0000FF);
+            break;
         }
-        break;
         case TETRONIMO_TYPE_J: {
             this->color = sf::Color(0x0000FFFF);
+            break;
         }
-        break;
         case TETRONIMO_TYPE_S: {
             this->color = sf::Color(0x00FFFFFF);
+            break;
         }
-        break;
         case TETRONIMO_TYPE_Z: {
             this->color = sf::Color(0xFF00FFFF);
+            break;
         }
-        break;
         case TETRONIMO_TYPE_T: {
             this->color = sf::Color(0xFFFFFFFF);
+            break;
         }
-        break;
+        default: {
+            this->color = sf::Color(0xF0F0F0AA);
+            break;
+        }
     }
     this->setGridForType(this->type);
     int rect = 0;
@@ -177,48 +213,62 @@ void TetrisPiece::printGrid() {
 
 void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
     uint16_t type;
+    // const char type_string[17];
     switch(tetronimoType) {
         case TETRONIMO_TYPE_NONE: {
-            type = 0;
+            type = kGRID_NONE;
+            break;
         }
-        break;
         case TETRONIMO_TYPE_O: {
             type = kGRID_O;
+            break;
         }
-        break;
         case TETRONIMO_TYPE_I: {
             type = kGRID_I;
+            break;
         }
-        break;
         case TETRONIMO_TYPE_L: {
             type = kGRID_L;
+            break;
         }
-        break;
         case TETRONIMO_TYPE_J: {
             type = kGRID_J;
+            // type_string = kGRID_J
+            break;
         }
-        break;
         case TETRONIMO_TYPE_S: {
             type = kGRID_S;
+            break;
         }
-        break;
         case TETRONIMO_TYPE_Z: {
             type = kGRID_Z;
+            break;
         }
-        break;
         case TETRONIMO_TYPE_T: {
             type = kGRID_T;
+            break;
         }
-        break;
+        default: {
+            type = kGRID_NONE;
+            break;
+        }
     }
-    std::cout << "type: "<< type << std::endl;
+    // std::cout << "type: "<< type << std::endl;
     int max = (4*4) - 1;
     int i = max;
     int j = 0;
     for (; i > 0 && j < max; i--, j++) {
         grid[0][j] = type >> i & 1;
+        // grid[0][j] = (type_string[j] == "_") ? true : false;
         //std::cout << "grid " << i << " = " << (int) grid[0][j] << std::endl;
     }
+}
+
+void TetrisPiece::resetWithType(TetronimoType tetronimoType) {
+    this->type = tetronimoType;
+    this->setShapeForType(tetronimoType);
+    this->updatePosition(3, 0);
+    this->printGrid();
 }
 
 // void TetrisPiece::destroy() {

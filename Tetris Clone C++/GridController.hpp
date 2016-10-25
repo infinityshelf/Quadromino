@@ -5,8 +5,8 @@ extern const int windowWidth;
 extern const int windowHeight;
 extern const bool debug;
 extern const int pixels;
-extern const int rows;
-extern const int columns;
+extern const int max_rows;
+extern const int max_columns;
 class TetrisPiece;
 class GridController
 {

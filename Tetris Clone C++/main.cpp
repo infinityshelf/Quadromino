@@ -57,12 +57,18 @@ int main()
         }
         if (piece.row >= 18) {
             spawnPiece = true;
+            cout << "hdioawenoifnoiwenfodnodien" << endl;
         }
         if (spawnPiece) {
             piece.stick();
             // TetronimoType nextpiece = mainGrid->queue->peek();
             TetronimoType nextpiece = TETRONIMO_TYPE_O;
+            piece.printGrid();
+            cout << "hdioawenoifnoiwenfodnodien" << endl;
+            cout << static_cast<int>(piece.color.r) << endl;
             piece.resetWithType(nextpiece);
+            // color does not reset here
+            cout << static_cast<int>(piece.color.r) << endl;
             spawnPiece = false;
         }
         window.clear();

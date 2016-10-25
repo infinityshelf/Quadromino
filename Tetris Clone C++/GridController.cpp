@@ -18,7 +18,7 @@ sf::RenderWindow * GridController::m_windowref = nullptr;
 GridController* GridController::instance() {
     // static GridController instance = GridController();
     static GridController instance = GridController();
-    std::cout << "instance pointer = " << &instance << std::endl;
+    // std::cout << "instance pointer = " << &instance << std::endl;
     return &instance;
 }
 
@@ -43,13 +43,15 @@ bool GridController::isSpaceOccupied(int x, int y) {
 
 void GridController::setSpaceOccupied(int x, int y, TetronimoType type) {
     if (x >= 0 && x < ROWS && y >= 0 && y < COLUMNS) {
+        // std::cout << "setspace called" << std::endl;
         this->grid[y][x] = type;
     }
+    // std::cout << "setspace called" << std::endl;
     //this->printGrid();
 }
 
 void GridController::printGrid() {
-    std::cout << std::endl;
+    // std::cout << std::endl;
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {
             if (x == 0) {
@@ -59,7 +61,7 @@ void GridController::printGrid() {
             TetronimoType tetronimoType = this->grid[y][x];
             switch(tetronimoType) {
                 case TETRONIMO_TYPE_O: {
-                    // std::cout << this->grid[y][x];
+                    std::cout << this->grid[y][x];
                     place = 'O';
                     break;
                 }

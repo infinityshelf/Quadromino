@@ -27,7 +27,6 @@ private:
     bool grid[4][4];
     static sf::RenderWindow * m_windowRef;
     static GridController * m_gridController;
-    static sf::Color color;
     void setShapeForType(TetronimoType tetronimoType);
     static TetronimoType type;
     void updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape);
@@ -36,6 +35,7 @@ public:
     int x, y, col, row;
     sf::RectangleShape rectShapes[4];
     static sf::RectangleShape bbox;
+    static sf::Color color;
     TetrisPiece();
     void stick();
     void setType(TetronimoType type);

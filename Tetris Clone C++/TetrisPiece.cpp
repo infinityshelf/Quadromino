@@ -53,7 +53,7 @@ void TetrisPiece::moveRight() {
 void TetrisPiece::moveDown() {
     bool canMoveDown = true;
     canMoveDown = this->offsetFree(0, 1);
-    std::cout << "canMoveDown: " << canMoveDown << std::endl;
+    // std::cout << "canMoveDown: " << canMoveDown << std::endl;
     if (canMoveDown) {
         this->updatePosition(this->col, this->row+1);
     }
@@ -64,10 +64,10 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
-                std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+                // std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
                 if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off)) {
                     free = false;
-                    std::cout << "ugh";
+                    // std::cout << "ugh";
                     break;
                 }
             }
@@ -97,7 +97,7 @@ void TetrisPiece::updatePosition(int col, int row) {
     //         //this->m_gridController->setSpaceOccupied(global_row,global_col,occupied);
     //     }
     // }
-    this->m_gridController->printGrid();
+    // this->m_gridController->printGrid();
 }
 
 void TetrisPiece::stick() {
@@ -198,17 +198,19 @@ void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
 
 void TetrisPiece::printGrid() {
     int max = 4*4;
-    std::cout << "TetrisPiece::printGrid() start" << std::endl << "printing grid" << std::endl;
+    // std::cout << "TetrisPiece::printGrid() start" << std::endl << "printing grid" << std::endl;
+    std::cout << "+----+" << std::endl;
     for (int i = 0; i < max; i++) {
         if (i % 4 == 0) {
-            std::cout << "|";
+            std::cout << '|';
         }
-        std::cout << ((this->grid[0][i]) ? "@":" ");
+        std::cout << ((this->grid[0][i]) ? '@':' ');
         if (i % 4 == 3) {
-            std::cout << "|" << std::endl;
+            std::cout << '|' << std::endl;
         }
     }
-    std::cout << "TetrisPiece::printGrid() did end" << std::endl;
+    std::cout << "+----+" << std::endl;
+    // std::cout << "TetrisPiece::printGrid() did end" << std::endl;
 }
 
 void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
@@ -253,14 +255,14 @@ void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
             break;
         }
     }
-    // std::cout << "type: "<< type << std::endl;
+    std::cout << "type: "<< static_cast<int>(type) << std::endl;
     int max = (4*4) - 1;
     int i = max;
     int j = 0;
     for (; i > 0 && j < max; i--, j++) {
         grid[0][j] = type >> i & 1;
         // grid[0][j] = (type_string[j] == "_") ? true : false;
-        //std::cout << "grid " << i << " = " << (int) grid[0][j] << std::endl;
+        // std::cout << "grid " << i << " = " << (int) grid[0][j] << std::endl;
     }
 }
 
@@ -268,7 +270,6 @@ void TetrisPiece::resetWithType(TetronimoType tetronimoType) {
     this->type = tetronimoType;
     this->setShapeForType(tetronimoType);
     this->updatePosition(3, 0);
-    this->printGrid();
 }
 
 // void TetrisPiece::destroy() {

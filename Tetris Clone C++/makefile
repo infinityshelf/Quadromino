@@ -1,4 +1,4 @@
-CFLAGS = -g -std=c++14 -Wall -Winit-self -Wextra -Weffc++ -Werror -pedantic -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -flto -Wodr -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral
+CFLAGS = -std=c++14 -Wall -Winit-self -Wextra -Weffc++ -Werror -pedantic -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -flto -Wodr -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral
 # CFLAGS = -Wall
 
 all: main.o TetrisPiece.o GridController.o
@@ -6,16 +6,16 @@ all: main.o TetrisPiece.o GridController.o
 	./Tetris.exe
 
 wo-run: main.o TetrisPiece.o GridController.o
-	g++-6 $(CFLAGS) main.o TetrisPiece.o GridController.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
+	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
 
 main.o: main.cpp TetrisPiece.hpp GridController.hpp
-	g++-6 $(CFLAGS) -c main.cpp
+	g++ $(CFLAGS) -c main.cpp
 
 TetrisPiece.o: TetrisPiece.cpp TetrisPiece.hpp GridController.hpp
-	g++-6 $(CFLAGS) -c TetrisPiece.cpp
+	g++ $(CFLAGS) -c TetrisPiece.cpp
 
 GridController.o: GridController.cpp GridController.hpp
-	g++-6 $(CFLAGS) -c GridController.cpp
+	g++ $(CFLAGS) -c GridController.cpp
 
 clean:
 	rm *.o

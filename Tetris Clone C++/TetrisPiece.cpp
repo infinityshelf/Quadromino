@@ -2,28 +2,37 @@
 #include "GridController.hpp"
 #include <iostream>
 
+
 // const uint16_t kGRID_NONE = 0b0000000000000000;
+//                             0x   0   0   0   0;
 const uint16_t kGRID_NONE = 0x0000;
-//                          0x   0   0   0   0;
+
 // const uint16_t kGRID_O = 0b0000011001100000;
+//                          0x   0   6   6   0
 const uint16_t kGRID_O = 0x0660;
-//                       0x   0   6   6   0
-// const char kGRID_J[17] = '______1___1__11_';
+
 // const uint16_t kGRID_I = 0b0000111100000000;
+//                          0x   0   F   0   0
 const uint16_t kGRID_I = 0x0F00;
-//                       0x   0   F   0   0
+
 // const uint16_t kGRID_L = 0b0000010001000110;
+//                          0x   0   4   4   6
 const uint16_t kGRID_L = 0x0446;
-//                       0x   0   4   4   6
+
 // const uint16_t kGRID_J = 0b0000001000100110;
+//                          0x   0   2   2   6
 const uint16_t kGRID_J = 0x0226;
-//                       0x   0   2   2   6
+
 // const uint16_t kGRID_S = 0b0000010001100010;
+//                          0x   0   4   6   2
 const uint16_t kGRID_S = 0x0462;
-//                       0x   0   4   6   2
+
 // const uint16_t kGRID_Z = 0b0000001001100100;
+//                          0x   0   2   6   4
 const uint16_t kGRID_Z = 0x0264;
+
 // const uint16_t kGRID_T = 0b0000001001110000;
+//                          0x   0   2   7   0
 const uint16_t kGRID_T = 0x0270;
 
 sf::RenderWindow* TetrisPiece::m_windowRef = nullptr;

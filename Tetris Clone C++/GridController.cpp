@@ -5,8 +5,8 @@ const int windowWidth = pixels * 10;
 const int windowHeight = pixels * 22;
 const bool debug = true;
 const int pixels = 32.0f;
-const int rows = 22;
-const int columns = 10;
+const int max_rows = 22;
+const int max_columns = 10;
 
 GridController * GridController::s_instance = nullptr;
 sf::RenderWindow * GridController::m_windowref = nullptr;
@@ -30,7 +30,7 @@ bool GridController::isSpaceOccupied(int row, int col) {
 }
 
 void GridController::setSpaceOccupied(int row, int col, bool occupied) {
-    if (row >= 0 && row < rows && col >= 0 && col < columns) {
+    if (row >= 0 && row < max_rows && col >= 0 && col < max_columns) {
         this->grid[col][row] = occupied;
     }
     //this->printGrid();
@@ -38,8 +38,8 @@ void GridController::setSpaceOccupied(int row, int col, bool occupied) {
 
 void GridController::printGrid() {
     std::cout << std::endl;
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < columns; col++) {
+    for (int row = 0; row < max_rows; row++) {
+        for (int col = 0; col < max_columns; col++) {
             if (col == 0) {
                 std::cout << "|";
             }

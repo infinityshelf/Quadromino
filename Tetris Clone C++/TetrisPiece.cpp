@@ -50,10 +50,9 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
-                // std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
-                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off)) {
+                std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off) || this->row+row+1 >= max_rows) {
                     free = false;
-                    // std::cout << "ugh";
                     break;
                 }
             }
@@ -74,16 +73,6 @@ void TetrisPiece::updatePosition(int col, int row) {
         this->updateRectUsingDelta(dx, dy, this->rectShapes[i]);
     }
     this->updateRectUsingDelta(dx, dy, this->bbox);
-    // for (int row = 0; row < 4; row++) {
-    //     for (int col = 0; col < 4; ++col) {
-    //         //this->printGrid();
-    //         // int global_row = this->row+row;
-    //         // int global_col = this->col+col;
-    //         // bool occupied = this->grid[row][col];
-    //         //this->m_gridController->setSpaceOccupied(global_row,global_col,occupied);
-    //     }
-    // }
-    // this->m_gridController->printGrid();
 }
 
 void TetrisPiece::stick() {
@@ -130,15 +119,15 @@ void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
         case TETRONIMO_TYPE_NONE:
             break;
         case TETRONIMO_TYPE_O: {
-            this->color = sf::Color(0xFF0000FF);
-            break;
-        }
-        case TETRONIMO_TYPE_I: {
             this->color = sf::Color(0xFFFF00FF);
             break;
         }
+        case TETRONIMO_TYPE_I: {
+            this->color = sf::Color(0x00FFFFFF);
+            break;
+        }
         case TETRONIMO_TYPE_L: {
-            this->color = sf::Color(0xFF0000FF);
+            this->color = sf::Color(0xFF7F00FF);
             break;
         }
         case TETRONIMO_TYPE_J: {
@@ -146,19 +135,15 @@ void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
             break;
         }
         case TETRONIMO_TYPE_S: {
-            this->color = sf::Color(0x00FFFFFF);
+            this->color = sf::Color(0x00FF00FF);
             break;
         }
         case TETRONIMO_TYPE_Z: {
-            this->color = sf::Color(0xFF00FFFF);
+            this->color = sf::Color(0xFF0000FF);
             break;
         }
         case TETRONIMO_TYPE_T: {
-            this->color = sf::Color(0xFFFFFFFF);
-            break;
-        }
-        default: {
-            this->color = sf::Color(0xF0F0F0AA);
+            this->color = sf::Color(0x7F00FFFF);
             break;
         }
     }

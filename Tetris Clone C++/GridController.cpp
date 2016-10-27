@@ -1,5 +1,5 @@
 #include "GridController.hpp"
-// #include "TetrisPiece.hpp"
+#include "TetrisPiece.hpp"
 #include <iostream>
 
 const int windowWidth = pixels * COLUMNS;
@@ -7,7 +7,7 @@ const int windowHeight = pixels * ROWS;
 const bool debug = true;
 const int pixels = 32.0f;
 
-typedef enum TETRONIMO_TYPES TetronimoType;
+// typedef enum TETRONIMO_TYPES TetronimoType;
 
 GridController * GridController::s_instance = nullptr;
 sf::RenderWindow * GridController::m_windowref = nullptr;
@@ -49,6 +49,7 @@ void GridController::setSpaceOccupied(int x, int y, TetronimoType type) {
 }
 
 void GridController::printGrid() {
+
     // std::cout << std::endl;
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {

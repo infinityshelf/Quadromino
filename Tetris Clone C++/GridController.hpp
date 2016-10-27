@@ -7,9 +7,6 @@ extern const int windowWidth;
 extern const int windowHeight;
 extern const bool debug;
 extern const int pixels;
-extern const int rows;
-extern const int columns;
-
 class TetrisPiece;
 
 // typedef enum TETRONIMO_TYPES TetronimoType;

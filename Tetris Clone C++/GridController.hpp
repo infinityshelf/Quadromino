@@ -1,18 +1,20 @@
 #ifndef GRIDCONTROLLER_H
 #define GRIDCONTROLLER_H
 #include "TetrisPiece.hpp"
+#define ROWS 22
+#define COLUMNS 10
 extern const int windowWidth;
 extern const int windowHeight;
 extern const bool debug;
 extern const int pixels;
-extern const int max_rows;
-extern const int max_columns;
 class TetrisPiece;
-class GridController
-{
+
+// typedef enum TETRONIMO_TYPES TetronimoType;
+
+class GridController {
 private:
-    TetrisPiece *pieces;
-    bool grid[10][22];
+    // TetrisPiece *pieces;
+    TetronimoType grid[ROWS][COLUMNS];
     static GridController *s_instance;
     static sf::RenderWindow * m_windowref;
     GridController();
@@ -24,7 +26,7 @@ public:
     sf::RenderWindow * window_instance();
     void provideWindow(sf::RenderWindow * window);
     void printGrid();
-    void setSpaceOccupied(int row, int col, bool occupied);
+    void setSpaceOccupied(int row, int col, TetronimoType type);
     bool isSpaceOccupied(int row, int col);
 };
 #endif

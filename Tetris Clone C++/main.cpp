@@ -14,30 +14,30 @@ int main()
     static GridController *mainGrid = GridController::instance();
     mainGrid->provideWindow(&window);
     mainGrid->printGrid();
+    bool autoDrop = true;
+    // return 0;
     window.setFramerateLimit(60);
     TetrisPiece piece;
-    piece.updatePosition(0,0);
-    piece.setType(TETRONIMO_TYPE_Z);
-    
-    bool autoDrop = true;
-    // bool spawnPiece = false;
+    piece.updatePosition(3,0);
+    piece.setType(TETRONIMO_TYPE_L);
+    bool spawnPiece = false;
     while (window.isOpen()) {
         frameCounter++;
-    
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape) {
+                if (event.key.code == sf::Keyboard::Escape or event.key.code == sf::Keyboard::Q) {
                     window.close();
                 } else {
                     if (event.key.code == sf::Keyboard::Left) {
                         piece.moveLeft();
                     }
                     if (event.key.code == sf::Keyboard::Right) {
-                    
+
                         piece.moveRight();
                     }
                     if (event.key.code == sf::Keyboard::Down) {
@@ -55,15 +55,21 @@ int main()
                 }
             }
         }
-        // if (piece.row >= 18) {
-        //     spawnPiece = true;
-        // }
-        // if (spawnPiece) {
-        //     piece.stick();
-        //     TetronimoType nextpiece = mainGrid->queue->peek();
-        //     piece.reset_with_type(nextpiece);
-        //     spawnPiece = false;
-        // }
+        if (piece.row >= 18) {
+            spawnPiece = true;
+        }
+        if (spawnPiece) {
+            piece.lock();
+            // TetronimoType nextpiece = mainGrid->queue->peek();
+            static TetronimoType nextpiece = static_cast<TetronimoType>(0);
+            nextpiece = static_cast<TetronimoType>((static_cast<int>(nextpiece) + 1) % 7);
+            piece.printGrid();
+            cout << "color before is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
+            piece.resetWithType(nextpiece);
+            // color does not reset here
+            cout << "color after is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
+            spawnPiece = false;
+        }
         window.clear();
         if (frameCounter % 60 == 59) {
             frameCounter %= 60;

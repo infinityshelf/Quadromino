@@ -1,6 +1,8 @@
 #ifndef GRIDCONTROLLER_H
 #define GRIDCONTROLLER_H
 #include "TetrisPiece.hpp"
+#define ROWS 22
+#define COLUMNS 10
 extern const int windowWidth;
 extern const int windowHeight;
 extern const bool debug;
@@ -15,7 +17,7 @@ class TetrisPiece;
 class GridController {
 private:
     // TetrisPiece *pieces;
-    TetronimoType grid[22][10];
+    TetronimoType grid[ROWS][COLUMNS];
     static GridController *s_instance;
     static sf::RenderWindow * m_windowref;
     GridController();

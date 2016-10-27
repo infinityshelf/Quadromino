@@ -2,12 +2,10 @@
 // #include "TetrisPiece.hpp"
 #include <iostream>
 
-const int windowWidth = pixels * 10;
-const int windowHeight = pixels * 22;
+const int windowWidth = pixels * COLUMNS;
+const int windowHeight = pixels * ROWS;
 const bool debug = true;
 const int pixels = 32.0f;
-#define ROWS 22
-#define COLUMNS 10
 
 typedef enum TETRONIMO_TYPES TetronimoType;
 
@@ -26,10 +24,10 @@ GridController::GridController() {
     // for (int i = 0; i < ROWS*COLUMNS; i++) {
     //     this->grid[0][i] = false;
     // }
-    // this->grid[10][22] = {TETRONIMO_TYPE_NONE};
-    for (int y = 0; y < 22; y++) {
+    // this->grid[COLUMNS][ROWS] = {TETRONIMO_TYPE_NONE};
+    for (int y = 0; y < ROWS; y++) {
         // for (int j = 0; i < 22; j++) {
-        for (int x = 0; x < 10; x++) {
+        for (int x = 0; x < COLUMNS; x++) {
             this->grid[y][x] = TETRONIMO_TYPE_NONE;
         }
     }

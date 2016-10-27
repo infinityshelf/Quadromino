@@ -37,7 +37,7 @@ public:
     static sf::RectangleShape bbox;
     static sf::Color color;
     TetrisPiece();
-    void stick();
+    void lock();
     void setType(TetronimoType type);
     void moveLeft();
     void moveRight();

@@ -51,7 +51,7 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
                 std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
-                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off) || this->row+row+1 >= max_rows) {
+                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off) || this->row+row+1 >= ROWS) {
                     free = false;
                     break;
                 }
@@ -75,7 +75,7 @@ void TetrisPiece::updatePosition(int col, int row) {
     this->updateRectUsingDelta(dx, dy, this->bbox);
 }
 
-void TetrisPiece::stick() {
+void TetrisPiece::lock() {
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 4; ++col) {
             // this->printGrid();
@@ -84,10 +84,12 @@ void TetrisPiece::stick() {
             int global_col = this->col+col;
             bool occupied = this->grid[row][col];
             if (occupied) {
+                std::cout << "here!!! TetrisPiece.cpp:87 TetrisPiece::lock" << std::endl;
                 this->m_gridController->setSpaceOccupied(global_col,global_row,this->type);
             }
         }
     }
+    this->m_gridController->printGrid();
 }
 
 void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
@@ -227,13 +229,10 @@ void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
         }
     }
     std::cout << "type: "<< static_cast<int>(type) << std::endl;
-    int max = (4*4) - 1;
-    int i = max;
-    int j = 0;
-    for (; i > 0 && j < max; i--, j++) {
-        grid[0][j] = type >> i & 1;
-        // grid[0][j] = (type_string[j] == "_") ? true : false;
-        // std::cout << "grid " << i << " = " << (int) grid[0][j] << std::endl;
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            grid[y][x] = (type >> (4*y + x)) & 1;
+        }
     }
 }
 

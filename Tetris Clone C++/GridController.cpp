@@ -1,6 +1,7 @@
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
 #include <iostream>
+#include <cassert>
 
 const int windowWidth = pixels * COLUMNS;
 const int windowHeight = pixels * ROWS;
@@ -40,12 +41,13 @@ bool GridController::isSpaceOccupied(int x, int y) {
 }
 
 void GridController::setSpaceOccupied(int x, int y, TetronimoType type) {
-    if (x >= 0 && x < ROWS && y >= 0 && y < COLUMNS) {
-        // std::cout << "setspace called" << std::endl;
+    if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
+        std::cout << "setspace called" << std::endl;
         this->grid[y][x] = type;
+        assert(this->grid[y][x] != TETRONIMO_TYPE_NONE);
     }
     // std::cout << "setspace called" << std::endl;
-    //this->printGrid();
+    this->printGrid();
 }
 
 void GridController::printGrid() {
@@ -56,39 +58,47 @@ void GridController::printGrid() {
             if (x == 0) {
                 std::cout << "|";
             }
-            char place = '_';
+            char place;
             TetronimoType tetronimoType = this->grid[y][x];
+            // std::cout << static_cast<int>(tetronimoType);
             switch(tetronimoType) {
                 case TETRONIMO_TYPE_O: {
-                    std::cout << this->grid[y][x];
+                    // std::cout << "tetronimoType is O";
                     place = 'O';
                     break;
                 }
                 case TETRONIMO_TYPE_I: {
+                    // std::cout << "tetronimoType is I";
                     place = 'I';
                     break;
                 }
                 case TETRONIMO_TYPE_L: {
+                    // std::cout << "tetronimoType is L";
                     place = 'L';
                     break;
                 }
                 case TETRONIMO_TYPE_J: {
+                    // std::cout << "tetronimoType is J";
                     place = 'J';
                     break;
                 }
                 case TETRONIMO_TYPE_S: {
+                    // std::cout << "tetronimoType is S";
                     place = 'S';
                     break;
                 }
                 case TETRONIMO_TYPE_Z: {
+                    // std::cout << "tetronimoType is Z";
                     place = 'Z';
                     break;
                 }
                 case TETRONIMO_TYPE_T: {
+                    // std::cout << "tetronimoType is T";
                     place = 'T';
                     break;
                 }
                 case TETRONIMO_TYPE_NONE: {
+                    // std::cout << "tetronimoType is None";
                     place = '_';
                     break;
                 }

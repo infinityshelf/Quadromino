@@ -1,11 +1,14 @@
-CFLAGS = -std=c++14 -Wall -Winit-self -Wextra -Weffc++ -Werror -pedantic -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -flto -Wodr -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral
+CFLAGS = -std=c++14 -Wall -Winit-self -Wextra -Weffc++ -pedantic -Wredundant-decls -Wcast-align -Wmissing-declarations -Wmissing-include-dirs -Wswitch-enum -Wswitch-default -Winvalid-pch -flto -Wodr -Wformat=2 -Wmissing-format-attribute -Wformat-nonliteral -Werror
 # CFLAGS = -Wall
 
-all: main.o TetrisPiece.o GridController.o
-	make wo-run
+all:
+	make run
+
+run:
+	make no-run
 	./Tetris.exe
 
-wo-run: main.o TetrisPiece.o GridController.o
+no-run: main.o TetrisPiece.o GridController.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
 
 main.o: main.cpp TetrisPiece.hpp GridController.hpp

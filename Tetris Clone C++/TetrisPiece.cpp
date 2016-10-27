@@ -3,43 +3,20 @@
 #include <iostream>
 
 
-// const uint16_t kGRID_NONE = 0b0000000000000000;
-//                             0x   0   0   0   0;
-const uint16_t kGRID_NONE = 0x0000;
+const uint16_t kGRID_NONE = 0b0000000000000000;
+const uint16_t kGRID_O =    0b0000011001100000;
+const uint16_t kGRID_I =    0b0000111100000000;
+const uint16_t kGRID_L =    0b0000010001000110;
+const uint16_t kGRID_J =    0b0000001000100110;
+const uint16_t kGRID_S =    0b0000010001100010;
+const uint16_t kGRID_Z =    0b0000001001100100;
+const uint16_t kGRID_T =    0b0000001001110000;
 
-// const uint16_t kGRID_O = 0b0000011001100000;
-//                          0x   0   6   6   0
-const uint16_t kGRID_O = 0x0660;
-
-// const uint16_t kGRID_I = 0b0000111100000000;
-//                          0x   0   F   0   0
-const uint16_t kGRID_I = 0x0F00;
-
-// const uint16_t kGRID_L = 0b0000010001000110;
-//                          0x   0   4   4   6
-const uint16_t kGRID_L = 0x0446;
-
-// const uint16_t kGRID_J = 0b0000001000100110;
-//                          0x   0   2   2   6
-const uint16_t kGRID_J = 0x0226;
-
-// const uint16_t kGRID_S = 0b0000010001100010;
-//                          0x   0   4   6   2
-const uint16_t kGRID_S = 0x0462;
-
-// const uint16_t kGRID_Z = 0b0000001001100100;
-//                          0x   0   2   6   4
-const uint16_t kGRID_Z = 0x0264;
-
-// const uint16_t kGRID_T = 0b0000001001110000;
-//                          0x   0   2   7   0
-const uint16_t kGRID_T = 0x0270;
-
-sf::RenderWindow* TetrisPiece::m_windowRef = nullptr;
-GridController* TetrisPiece::m_gridController = nullptr;
-TetronimoType TetrisPiece::type = TETRONIMO_TYPE_I;
-sf::RectangleShape TetrisPiece::bbox = sf::RectangleShape();
-sf::Color TetrisPiece::color = sf::Color(0xFFFFFFFF);
+sf::RenderWindow*   TetrisPiece::m_windowRef =       nullptr;
+GridController*     TetrisPiece::m_gridController =  nullptr;
+TetronimoType       TetrisPiece::type =              TETRONIMO_TYPE_I;
+sf::RectangleShape  TetrisPiece::bbox =              sf::RectangleShape();
+sf::Color           TetrisPiece::color =             sf::Color(0xFFFFFFFF);
 
 TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
     this->m_gridController = GridController::instance();

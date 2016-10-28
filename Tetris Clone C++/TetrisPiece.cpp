@@ -108,6 +108,35 @@ void TetrisPiece::updatePosition() {
     this->setShapeForType(this->type);
 }
 
+sf::Color TetrisPiece::colorForType(TetronimoType tetronimoType) {
+    switch(tetronimoType) {
+        case TETRONIMO_TYPE_O: {
+            return sf::Color(0xFFFF00FF);
+        }
+        case TETRONIMO_TYPE_I: {
+            return sf::Color(0x00FFFFFF);
+        }
+        case TETRONIMO_TYPE_L: {
+            return sf::Color(0xFF7F00FF);
+        }
+        case TETRONIMO_TYPE_J: {
+            return sf::Color(0x0000FFFF);
+        }
+        case TETRONIMO_TYPE_S: {
+            return sf::Color(0x00FF00FF);
+        }
+        case TETRONIMO_TYPE_Z: {
+            return sf::Color(0xFF0000FF);
+        }
+        case TETRONIMO_TYPE_T: {
+            return sf::Color(0x7F00FFFF);
+        }
+        case TETRONIMO_TYPE_NONE: {
+            return sf::Color(0xE0B0FFFF);
+        }
+    }
+}
+
 void TetrisPiece::draw() {
     for (int i = 0; i < 4; i++) {
         this->m_windowRef->draw(this->rectShapes[i]);
@@ -117,38 +146,7 @@ void TetrisPiece::draw() {
 
 void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
     sf::Vector2f square = sf::Vector2f(pixels, pixels);
-    switch(tetronimoType) {
-        case TETRONIMO_TYPE_NONE:
-            break;
-        case TETRONIMO_TYPE_O: {
-            this->color = sf::Color(0xFFFF00FF);
-            break;
-        }
-        case TETRONIMO_TYPE_I: {
-            this->color = sf::Color(0x00FFFFFF);
-            break;
-        }
-        case TETRONIMO_TYPE_L: {
-            this->color = sf::Color(0xFF7F00FF);
-            break;
-        }
-        case TETRONIMO_TYPE_J: {
-            this->color = sf::Color(0x0000FFFF);
-            break;
-        }
-        case TETRONIMO_TYPE_S: {
-            this->color = sf::Color(0x00FF00FF);
-            break;
-        }
-        case TETRONIMO_TYPE_Z: {
-            this->color = sf::Color(0xFF0000FF);
-            break;
-        }
-        case TETRONIMO_TYPE_T: {
-            this->color = sf::Color(0x7F00FFFF);
-            break;
-        }
-    }
+    this->color = this->colorForType(tetronimoType);
     this->setGridForType(this->type);
     int rect = 0;
     for (int row = 0; row < 4 && rect < 4; row++) {

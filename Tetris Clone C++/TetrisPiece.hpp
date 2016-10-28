@@ -6,7 +6,7 @@
 
 class GridController;
 
-enum TETRONIMO_TYPES
+enum TetronimoType
 {
     TETRONIMO_TYPE_NONE,
     TETRONIMO_TYPE_O,
@@ -17,7 +17,7 @@ enum TETRONIMO_TYPES
     TETRONIMO_TYPE_Z,
     TETRONIMO_TYPE_S
 };
-typedef enum TETRONIMO_TYPES TetronimoType;
+// typedef enum TETRONIMO_TYPES TetronimoType;
 
 #include "GridController.hpp"
 
@@ -45,6 +45,7 @@ public:
     void updatePosition(int col, int row);
     void updatePosition();
     void draw();
+    static sf::Color colorForType(TetronimoType tetronimoType);
     void printGrid();
     void setGridForType(TetronimoType tetronimoType);
     void resetWithType(TetronimoType tetronimoType);

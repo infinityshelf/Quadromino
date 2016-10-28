@@ -11,9 +11,9 @@ class TetrisPiece;
 
 // typedef enum TETRONIMO_TYPES TetronimoType;
 
+
 class GridController {
 private:
-    // TetrisPiece *pieces;
     TetronimoType grid[ROWS][COLUMNS];
     static GridController *s_instance;
     static sf::RenderWindow * m_windowref;
@@ -22,6 +22,7 @@ private:
     void operator=(GridController const&);
 public:
     ~GridController();
+    void draw();
     static GridController* instance();
     sf::RenderWindow * window_instance();
     void provideWindow(sf::RenderWindow * window);

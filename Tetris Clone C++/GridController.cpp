@@ -124,3 +124,14 @@ void GridController::provideWindow(sf::RenderWindow * window) {
 sf::RenderWindow * GridController::window_instance() {
     return this->m_windowref;
 }
+
+void GridController::draw() {
+    // for (int y = 0; y < ROWS; ++y) {
+    //     for (int x = 0; x < COLUMNS; ++x) {
+    //         this->m_windowRef->draw();
+    //     }
+    // }
+}
+
+
+

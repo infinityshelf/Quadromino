@@ -78,6 +78,7 @@ int main()
             }
         }
         piece.draw();
+        mainGrid->draw();
         window.display();
     }
 

@@ -26,10 +26,12 @@ int main()
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
+                mainGrid->saveGridToFile();
                 window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape or event.key.code == sf::Keyboard::Q) {
+                    mainGrid->saveGridToFile();
                     window.close();
                 } else {
                     if (event.key.code == sf::Keyboard::Left) {

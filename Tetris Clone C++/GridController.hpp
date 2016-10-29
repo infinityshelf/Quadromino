@@ -8,6 +8,7 @@ extern const int windowWidth;
 extern const int windowHeight;
 extern const bool debug;
 extern const int pixels;
+extern const char fileName[];
 class TetrisPiece;
 
 class GridController {
@@ -18,6 +19,11 @@ private:
     GridController();
     GridController(GridController const&);
     void operator=(GridController const&);
+    void clearRow(int row);
+    void checkRows();
+    void shiftRowsAbove(int clearedRow);
+    static char characterForType(TetrominoType type);
+    static TetrominoType typeForCharacter(char place);
 public:
     ~GridController();
     void draw();
@@ -27,5 +33,6 @@ public:
     void printGrid();
     void setSpaceOccupied(int row, int col, TetrominoType type);
     bool isSpaceOccupied(int row, int col);
+    void saveGridToFile();
 };
 #endif

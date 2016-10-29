@@ -7,16 +7,16 @@
 */
 
 #include <iostream>
-#include "Unomino.hpp"
+#include "Monomino.hpp"
 
 using namespace std;
 
-sf::RectangleShape Unomino::shapes = nullptr;
+sf::RectangleShape Monomino::shapes = nullptr;
 
-Unomino::Unomino() {
+Monomino::Monomino() {
     /*do stuff here*/;
 }
 
-Unomino::rectangleShapeForType(TetronimoType tetronimoType) {
+Monomino::rectangleShapeForType(TetronimoType tetronimoType) {
     ;
 }

@@ -1,10 +1,10 @@
-#ifndef UNOMINO_H
-#define UNOMINO_H
+#ifndef MONOMINO_H
+#define MONOMINO_H
 #include "TetrisPiece.hpp"
 
 extern const int pixels;
 
-class Unomino {
+class Monomino {
 private:
     static sf::RectangleShape pieces[7];
 public:

@@ -18,8 +18,7 @@ int main()
     // return 0;
     window.setFramerateLimit(60);
     TetrisPiece piece;
-    piece.updatePosition(3,0);
-    piece.setType(TETRONIMO_TYPE_L);
+    piece.reset();
     bool spawnPiece = false;
     while (window.isOpen()) {
         frameCounter++;
@@ -37,8 +36,13 @@ int main()
                         piece.moveLeft();
                     }
                     if (event.key.code == sf::Keyboard::Right) {
-
                         piece.moveRight();
+                    }
+                    if (event.key.code == sf::Keyboard::D) {
+                        piece.rotateClockwise();
+                    }
+                    if (event.key.code == sf::Keyboard::A) {
+                        piece.rotateCounterClockwise();
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         autoDrop = false;
@@ -55,19 +59,12 @@ int main()
                 }
             }
         }
-        if (piece.row >= 18) {
+        if (piece.locked) {
             spawnPiece = true;
         }
         if (spawnPiece) {
-            piece.lock();
-            // TetronimoType nextpiece = mainGrid->queue->peek();
-            static TetronimoType nextpiece = static_cast<TetronimoType>(0);
-            nextpiece = static_cast<TetronimoType>((static_cast<int>(nextpiece) + 1) % 7);
             piece.printGrid();
-            cout << "color before is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
-            piece.resetWithType(nextpiece);
-            // color does not reset here
-            cout << "color after is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
+            piece.reset();
             spawnPiece = false;
         }
         window.clear();
@@ -78,6 +75,7 @@ int main()
             }
         }
         piece.draw();
+        mainGrid->draw();
         window.display();
     }
 

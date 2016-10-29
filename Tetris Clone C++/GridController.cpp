@@ -63,9 +63,9 @@ void GridController::printGrid() {
                 std::cout << "|";
             }
             char place;
-            TetrominoType TetrominoType = this->grid[y][x];
+            TetrominoType tetrominoType = this->grid[y][x];
             // std::cout << static_cast<int>(TetrominoType);
-            switch(TetrominoType) {
+            switch(tetrominoType) {
                 case TETROMINO_TYPE_O: {
                     // std::cout << "TetrominoType is O";
                     place = 'O';
@@ -109,7 +109,7 @@ void GridController::printGrid() {
                 }
                 default: {
                     place = '#';
-                    std::cout << TetrominoType;
+                    std::cout << tetrominoType;
                     break;
                 }
             }

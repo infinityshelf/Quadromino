@@ -1,6 +1,9 @@
 #ifndef MONOMINO_H
 #define MONOMINO_H
 #include "TetrisPiece.hpp"
+#include "TetrominoTypes.hpp"
+
+class TetrisPiece;
 
 extern const int pixels;
 
@@ -9,8 +12,10 @@ private:
     static sf::RectangleShape pieces[7];
 public:
     // should instantiate pieces to be the correct rectangles of the correct color.
-    Unomino();
-    sf::RectangleShape rectangleShapeForType(TetronimoType);
-}
+    Monomino();
+    ~Monomino();
+    static sf::RectangleShape rectangleShapeForType(TetrominoType type);
+    static sf::Color colorForType(TetrominoType type);
+};
 
 #endif

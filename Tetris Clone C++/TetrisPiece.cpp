@@ -1,7 +1,7 @@
 #include "TetrisPiece.hpp"
-#include "GridController.hpp"
 #include <iostream>
 
+const bool drawBBox = false;
 
 const uint16_t kGRID_NONE = 0b0000000000000000;
 const uint16_t kGRID_O =    0b0000011001100000;
@@ -14,7 +14,7 @@ const uint16_t kGRID_T =    0b0000001001110000;
 
 sf::RenderWindow*   TetrisPiece::m_windowRef =       nullptr;
 GridController*     TetrisPiece::m_gridController =  nullptr;
-TetronimoType       TetrisPiece::type =              TETRONIMO_TYPE_I;
+TetrominoType       TetrisPiece::type =              TETROMINO_TYPE_I;
 sf::RectangleShape  TetrisPiece::bbox =              sf::RectangleShape();
 sf::Color           TetrisPiece::color =             sf::Color(0xFFFFFFFF);
 
@@ -23,7 +23,7 @@ TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
     this->m_windowRef = this->m_gridController->window_instance();
 }
 
-void TetrisPiece::setType(TetronimoType type) {
+void TetrisPiece::setType(TetrominoType type) {
     this->type = type;
     this->setShapeForType(this->type);
 }
@@ -108,54 +108,22 @@ void TetrisPiece::updatePosition() {
     this->setShapeForType(this->type);
 }
 
-sf::Color TetrisPiece::colorForType(TetronimoType tetronimoType) {
-    switch(tetronimoType) {
-        case TETRONIMO_TYPE_O: {
-            return sf::Color(0xFFFF00FF);
-        }
-        case TETRONIMO_TYPE_I: {
-            return sf::Color(0x00FFFFFF);
-        }
-        case TETRONIMO_TYPE_L: {
-            return sf::Color(0xFF7F00FF);
-        }
-        case TETRONIMO_TYPE_J: {
-            return sf::Color(0x0000FFFF);
-        }
-        case TETRONIMO_TYPE_S: {
-            return sf::Color(0x00FF00FF);
-        }
-        case TETRONIMO_TYPE_Z: {
-            return sf::Color(0xFF0000FF);
-        }
-        case TETRONIMO_TYPE_T: {
-            return sf::Color(0x7F00FFFF);
-        }
-        case TETRONIMO_TYPE_NONE: {
-            return sf::Color(0xE0B0FFFF);
-        }
-    }
-}
-
 void TetrisPiece::draw() {
     for (int i = 0; i < 4; i++) {
         this->m_windowRef->draw(this->rectShapes[i]);
     }
-    this->m_windowRef->draw(this->bbox);
+    if (drawBBox)this->m_windowRef->draw(this->bbox);
 }
 
-void TetrisPiece::setShapeForType(TetronimoType tetronimoType) {
-    sf::Vector2f square = sf::Vector2f(pixels, pixels);
-    this->color = this->colorForType(tetronimoType);
+void TetrisPiece::setShapeForType(TetrominoType type) {
     this->setGridForType(this->type);
     int rect = 0;
     for (int row = 0; row < 4 && rect < 4; row++) {
         for (int col = 0; col < 4 && rect < 4; col++) {
             if (this->grid[row][col]) {
+                this->rectShapes[rect] = Monomino::rectangleShapeForType(type);
+                this->rectShapes[rect].setPosition(this->x+(col*pixels), this->y+(row*pixels));
                 rect++;
-                this->rectShapes[rect-1].setSize(square);
-                this->rectShapes[rect-1].setFillColor(this->color);
-                this->rectShapes[rect-1].setPosition(this->x+(col*pixels), this->y+(row*pixels));
             }
         }
     }
@@ -184,40 +152,40 @@ void TetrisPiece::printGrid() {
     // std::cout << "TetrisPiece::printGrid() did end" << std::endl;
 }
 
-void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
+void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
     uint16_t type;
     // const char type_string[17];
-    switch(tetronimoType) {
-        case TETRONIMO_TYPE_NONE: {
+    switch(tetrominoType) {
+        case TETROMINO_TYPE_NONE: {
             type = kGRID_NONE;
             break;
         }
-        case TETRONIMO_TYPE_O: {
+        case TETROMINO_TYPE_O: {
             type = kGRID_O;
             break;
         }
-        case TETRONIMO_TYPE_I: {
+        case TETROMINO_TYPE_I: {
             type = kGRID_I;
             break;
         }
-        case TETRONIMO_TYPE_L: {
+        case TETROMINO_TYPE_L: {
             type = kGRID_L;
             break;
         }
-        case TETRONIMO_TYPE_J: {
+        case TETROMINO_TYPE_J: {
             type = kGRID_J;
             // type_string = kGRID_J
             break;
         }
-        case TETRONIMO_TYPE_S: {
+        case TETROMINO_TYPE_S: {
             type = kGRID_S;
             break;
         }
-        case TETRONIMO_TYPE_Z: {
+        case TETROMINO_TYPE_Z: {
             type = kGRID_Z;
             break;
         }
-        case TETRONIMO_TYPE_T: {
+        case TETROMINO_TYPE_T: {
             type = kGRID_T;
             break;
         }
@@ -234,9 +202,9 @@ void TetrisPiece::setGridForType(TetronimoType tetronimoType) {
     }
 }
 
-void TetrisPiece::resetWithType(TetronimoType tetronimoType) {
-    this->type = tetronimoType;
-    this->setShapeForType(tetronimoType);
+void TetrisPiece::resetWithType(TetrominoType type) {
+    this->type = type;
+    this->setShapeForType(type);
     this->updatePosition(3, 0);
 }
 

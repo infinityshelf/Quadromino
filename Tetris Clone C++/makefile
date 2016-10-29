@@ -8,8 +8,8 @@ run:
 	make no-run
 	./Tetris.exe
 
-no-run: main.o TetrisPiece.o GridController.o
-	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
+no-run: main.o TetrisPiece.o GridController.o Monomino.o
+	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o Monomino.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
 
 main.o: main.cpp TetrisPiece.hpp GridController.hpp
 	g++ $(CFLAGS) -c main.cpp
@@ -19,6 +19,9 @@ TetrisPiece.o: TetrisPiece.cpp TetrisPiece.hpp GridController.hpp
 
 GridController.o: GridController.cpp GridController.hpp
 	g++ $(CFLAGS) -c GridController.cpp
+
+Monomino.o: Monomino.cpp Monomino.hpp
+	g++ $(CFLAGS) -c Monomino.cpp
 
 clean:
 	rm *.o

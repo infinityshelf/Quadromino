@@ -19,7 +19,7 @@ int main()
     window.setFramerateLimit(60);
     TetrisPiece piece;
     piece.updatePosition(3,0);
-    piece.setType(TETRONIMO_TYPE_L);
+    piece.setType(TETROMINO_TYPE_L);
     bool spawnPiece = false;
     while (window.isOpen()) {
         frameCounter++;
@@ -60,9 +60,9 @@ int main()
         }
         if (spawnPiece) {
             piece.lock();
-            // TetronimoType nextpiece = mainGrid->queue->peek();
-            static TetronimoType nextpiece = static_cast<TetronimoType>(0);
-            nextpiece = static_cast<TetronimoType>((static_cast<int>(nextpiece) + 1) % 7);
+            // TETROMINOType nextpiece = mainGrid->queue->peek();
+            static TetrominoType nextpiece = static_cast<TetrominoType>(0);
+            nextpiece = static_cast<TetrominoType>((static_cast<int>(nextpiece) + 1) % 7);
             piece.printGrid();
             cout << "color before is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
             piece.resetWithType(nextpiece);

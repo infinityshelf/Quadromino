@@ -1,6 +1,7 @@
 #ifndef GRIDCONTROLLER_H
 #define GRIDCONTROLLER_H
 #include "TetrisPiece.hpp"
+#include "TetrominoTypes.hpp"
 #define ROWS 22
 #define COLUMNS 10
 extern const int windowWidth;
@@ -9,12 +10,9 @@ extern const bool debug;
 extern const int pixels;
 class TetrisPiece;
 
-// typedef enum TETRONIMO_TYPES TetronimoType;
-
-
 class GridController {
 private:
-    TetronimoType grid[ROWS][COLUMNS];
+    TetrominoType grid[ROWS][COLUMNS];
     static GridController *s_instance;
     static sf::RenderWindow * m_windowref;
     GridController();
@@ -27,7 +25,7 @@ public:
     sf::RenderWindow * window_instance();
     void provideWindow(sf::RenderWindow * window);
     void printGrid();
-    void setSpaceOccupied(int row, int col, TetronimoType type);
+    void setSpaceOccupied(int row, int col, TetrominoType type);
     bool isSpaceOccupied(int row, int col);
 };
 #endif

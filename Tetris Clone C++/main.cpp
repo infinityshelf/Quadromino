@@ -18,8 +18,7 @@ int main()
     // return 0;
     window.setFramerateLimit(60);
     TetrisPiece piece;
-    piece.updatePosition(3,0);
-    piece.setType(TETROMINO_TYPE_L);
+    piece.reset();
     bool spawnPiece = false;
     while (window.isOpen()) {
         frameCounter++;
@@ -37,8 +36,13 @@ int main()
                         piece.moveLeft();
                     }
                     if (event.key.code == sf::Keyboard::Right) {
-
                         piece.moveRight();
+                    }
+                    if (event.key.code == sf::Keyboard::D) {
+                        piece.rotateClockwise();
+                    }
+                    if (event.key.code == sf::Keyboard::A) {
+                        piece.rotateCounterClockwise();
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         autoDrop = false;
@@ -55,16 +59,12 @@ int main()
                 }
             }
         }
-        if (piece.row >= 18) {
+        if (piece.locked) {
             spawnPiece = true;
         }
         if (spawnPiece) {
-            piece.lock();
-            static TetrominoType nextpiece = static_cast<TetrominoType>(0);
-            nextpiece = static_cast<TetrominoType>((static_cast<int>(nextpiece) + 1) % 7);
             piece.printGrid();
-            piece.resetWithType(nextpiece);
-
+            piece.reset();
             spawnPiece = false;
         }
         window.clear();

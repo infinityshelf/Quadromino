@@ -11,16 +11,16 @@ run:
 no-run: main.o TetrisPiece.o GridController.o Monomino.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o Monomino.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
 
-main.o: main.cpp TetrisPiece.hpp GridController.hpp
+main.o: main.cpp TetrisPiece.hpp GridController.hpp TetrominoTypes.hpp Monomino.hpp
 	g++ $(CFLAGS) -c main.cpp
 
-TetrisPiece.o: TetrisPiece.cpp TetrisPiece.hpp GridController.hpp
+TetrisPiece.o: TetrisPiece.cpp TetrisPiece.hpp GridController.hpp TetrominoTypes.hpp
 	g++ $(CFLAGS) -c TetrisPiece.cpp
 
-GridController.o: GridController.cpp GridController.hpp
+GridController.o: GridController.cpp GridController.hpp TetrominoTypes.hpp
 	g++ $(CFLAGS) -c GridController.cpp
 
-Monomino.o: Monomino.cpp Monomino.hpp
+Monomino.o: Monomino.cpp Monomino.hpp TetrisPiece.hpp TetrominoTypes.hpp
 	g++ $(CFLAGS) -c Monomino.cpp
 
 clean:

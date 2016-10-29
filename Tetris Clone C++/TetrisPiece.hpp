@@ -25,15 +25,18 @@ public:
     static sf::RectangleShape bbox;
     TetrisPiece();
     void lock();
+    bool locked;
     void setType(TetrominoType type);
     void moveLeft();
     void moveRight();
     void moveDown();
+    void rotateClockwise();
+    void rotateCounterClockwise();
     void updatePosition(int col, int row);
     void updatePosition();
     void draw();
     void printGrid();
-    void setGridForType(TetrominoType TETROMINOType);
-    void resetWithType(TetrominoType TETROMINOType);
+    void setGrid();
+    void reset();
 };
 #endif

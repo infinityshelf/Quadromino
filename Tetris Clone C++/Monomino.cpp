@@ -15,7 +15,40 @@ using namespace std;
 
 Monomino::Monomino() {
     /*do stuff here*/;
-    //this->pieces = malloc(sizeof(sf::RectangleShape) * 7);
+    std::cout << "ASDFASD";
+    int max = TETROMINO_TYPE_MAX;
+    for (int i = 0; i < max; i++) {
+        switch(i) {
+            case TETROMINO_TYPE_O: {
+                std::cout << "before: " << &this->pieces[TETROMINO_TYPE_O];
+                this->pieces[i] = Monomino::rectangleShapeForType(TETROMINO_TYPE_O);
+               std::cout << "after: " << &this->pieces[TETROMINO_TYPE_O];
+                break;
+            }
+            case TETROMINO_TYPE_I: {
+                break;
+            }
+            case TETROMINO_TYPE_L: {
+                break;
+            }
+            case TETROMINO_TYPE_J: {
+                break;
+            }
+            case TETROMINO_TYPE_S: {
+                break;
+            }
+            case TETROMINO_TYPE_Z: {
+                break;
+            }
+            case TETROMINO_TYPE_T: {
+                break;
+            }
+            case TETROMINO_TYPE_MAX:{};
+            case TETROMINO_TYPE_NONE: {
+                break;
+            }
+        }
+    }
 }
 
 Monomino::~Monomino() {
@@ -53,8 +86,11 @@ sf::Color Monomino::colorForType (TetrominoType type) {
         case TETROMINO_TYPE_T: {
             return sf::Color(0x7F00FFFF);
         }
+        case TETROMINO_TYPE_MAX:{
+            return sf::Color(0xFFFF0000);
+        };
         case TETROMINO_TYPE_NONE: {
-            return sf::Color(0xE0B0FFFF);
+            return sf::Color(0xE0B0FF11);
         }
     }
 }

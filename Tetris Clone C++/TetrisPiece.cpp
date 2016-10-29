@@ -1,7 +1,8 @@
 #include "TetrisPiece.hpp"
 #include <iostream>
+#include <random>
 
-const bool drawBBox = false;
+const bool drawBBox = true;
 
 const uint16_t kGRID_NONE = 0b0000000000000000;
 const uint16_t kGRID_O =    0b0000011001100000;
@@ -24,24 +25,56 @@ TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
 
 void TetrisPiece::setType(TetrominoType type) {
     this->type = type;
-    this->setShapes();
 }
 
 void TetrisPiece::moveLeft() {
-    this->updatePosition(this->col-1, this->row);
+    if (this->offsetFree(-1, 0)) {
+        this->updatePosition(this->col-1, this->row);
+    }
 }
 
 void TetrisPiece::moveRight() {
-    this->updatePosition(this->col+1, this->row);
+    if (this->offsetFree(1, 0)) {
+        this->updatePosition(this->col+1, this->row+0);
+    }
 }
 
 void TetrisPiece::moveDown() {
-    bool canMoveDown = true;
-    canMoveDown = this->offsetFree(0, 1);
-    // std::cout << "canMoveDown: " << canMoveDown << std::endl;
-    if (canMoveDown) {
+    if (this->offsetFree(0, 1)) {
         this->updatePosition(this->col, this->row+1);
     }
+}
+
+void TetrisPiece::rotateClockwise() {
+    std::cout << "rotateClockwise" << std::endl;
+    bool newGrid[4][4];
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            newGrid[x][y] = this->grid[4-1-y][x];
+        }
+    }
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            this->grid[y][x] = newGrid[y][x];
+        }
+    }
+    this->setShapes();
+}
+
+void TetrisPiece::rotateCounterClockwise() {
+    std::cout << "rotateClockwise" << std::endl;
+    bool newGrid[4][4];
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            newGrid[x][y] = this->grid[y][x];
+        }
+    }
+    for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 4; x++) {
+            this->grid[y][x] = newGrid[4-1-y][x];
+        }
+    }
+    this->setShapes();
 }
 
 bool TetrisPiece::offsetFree(int col_off, int row_off) {
@@ -50,13 +83,20 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
                 std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
-                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off) || this->row+row+1 >= ROWS) {
+                if (this->row+row+1 >= ROWS && row_off) {
                     free = false;
+                    this->lock();
+                    break;
+                }
+                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off)) {
+                    free = false;
+                    this->lock();
                     break;
                 }
             }
         }
     }
+    std::cout << ((free) ? "free" : "taken") << std::endl;
     return free;
 }
 
@@ -75,6 +115,7 @@ void TetrisPiece::updatePosition(int col, int row) {
 }
 
 void TetrisPiece::lock() {
+    this->locked = true;
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 4; ++col) {
             // this->printGrid();
@@ -115,7 +156,7 @@ void TetrisPiece::draw() {
 }
 
 void TetrisPiece::setShapes() {
-    this->setGridForType(this->type);
+    //this->setGridForType(this->type);
     int rect = 0;
     for (int row = 0; row < 4 && rect < 4; row++) {
         for (int col = 0; col < 4 && rect < 4; col++) {
@@ -128,9 +169,9 @@ void TetrisPiece::setShapes() {
     }
     this->bbox.setSize(sf::Vector2f(pixels * 4, pixels * 4));
     this->bbox.setPosition(this->x, this->y);
-    this->bbox.setFillColor(sf::Color(0xFFFFFF00));
+    this->bbox.setFillColor(sf::Color(0xFFFFFF7F));
     this->bbox.setOutlineColor(sf::Color(0xFFFFFFFF));
-    this->bbox.setOutlineThickness(1);
+    this->bbox.setOutlineThickness(3);
     this->printGrid();
 }
 
@@ -151,10 +192,10 @@ void TetrisPiece::printGrid() {
     // std::cout << "TetrisPiece::printGrid() did end" << std::endl;
 }
 
-void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
+void TetrisPiece::setGrid() {
     uint16_t type;
     // const char type_string[17];
-    switch(tetrominoType) {
+    switch(this->type) {
         case TETROMINO_TYPE_NONE: {
             type = kGRID_NONE;
             break;
@@ -188,12 +229,12 @@ void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
             type = kGRID_T;
             break;
         }
-        default: {
+        case TETROMINO_TYPE_MAX: {
             type = kGRID_NONE;
             break;
         }
     }
-    std::cout << "type: "<< static_cast<int>(type) << std::endl;
+    std::cout << "type: "<< static_cast<int>(this->type) << std::endl;
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
             grid[y][x] = (type >> (4*y + x)) & 1;
@@ -201,15 +242,17 @@ void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
     }
 }
 
-void TetrisPiece::resetWithType(TetrominoType type) {
-    this->type = type;
+void TetrisPiece::reset() {
+    this->locked = false;
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_real_distribution<double> dist(1,100);
+    int intType = dist(mt);
+    intType = intType % 7 + 1;
+    std::cout << "random: " << intType << std::endl;
+    TetrominoType newType = static_cast<TetrominoType>(intType);
+    this->setType(newType);
+    this->setGrid();
     this->setShapes();
     this->updatePosition(3, 0);
 }
-
-// void TetrisPiece::destroy() {
-//     // delete this->bbox;
-//     for (int i = 0; i < 4; i++) {
-//         // delete this->rectShapes[i];
-//     }
-// }

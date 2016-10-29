@@ -37,7 +37,11 @@ GridController::GridController() {
 GridController::~GridController() {}
 
 bool GridController::isSpaceOccupied(int x, int y) {
-    return (this->grid[y][x] != TETROMINO_TYPE_NONE);
+    bool occupado = false;
+    if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
+        occupado = (this->grid[y][x] != TETROMINO_TYPE_NONE);
+    }
+    return occupado;
 }
 
 void GridController::setSpaceOccupied(int x, int y, TetrominoType type) {
@@ -97,6 +101,7 @@ void GridController::printGrid() {
                     place = 'T';
                     break;
                 }
+                case TETROMINO_TYPE_MAX:{}
                 case TETROMINO_TYPE_NONE: {
                     // std::cout << "TetrominoType is None";
                     place = '_';
@@ -126,11 +131,15 @@ sf::RenderWindow * GridController::window_instance() {
 }
 
 void GridController::draw() {
-    // for (int y = 0; y < ROWS; ++y) {
-    //     for (int x = 0; x < COLUMNS; ++x) {
-    //         this->m_windowRef->draw();
-    //     }
-    // }
+    for (int y = 0; y < ROWS; ++y) {
+        for (int x = 0; x < COLUMNS; ++x) {
+            sf::RectangleShape shape = Monomino::rectangleShapeForType(this->grid[y][x]);
+            shape.setPosition(x*pixels, y*pixels);
+            if (this->grid[y][x] != TETROMINO_TYPE_NONE) {
+                this->m_windowref->draw(shape);
+            }
+        }
+    }
 }
 
 

@@ -34,10 +34,10 @@ public:
     void rotateClockwise();
     void rotateCounterClockwise();
     void updatePosition(int col, int row);
-    void updatePosition();
     void draw();
     void printGrid();
     void setGrid();
     void reset();
+    void moveToStartPosition();
 };
 #endif

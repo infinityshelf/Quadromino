@@ -16,7 +16,6 @@ sf::RenderWindow*   TetrisPiece::m_windowRef =       nullptr;
 GridController*     TetrisPiece::m_gridController =  nullptr;
 TetrominoType       TetrisPiece::type =              TETROMINO_TYPE_I;
 sf::RectangleShape  TetrisPiece::bbox =              sf::RectangleShape();
-sf::Color           TetrisPiece::color =             sf::Color(0xFFFFFFFF);
 
 TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
     this->m_gridController = GridController::instance();
@@ -25,7 +24,7 @@ TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
 
 void TetrisPiece::setType(TetrominoType type) {
     this->type = type;
-    this->setShapeForType(this->type);
+    this->setShapes();
 }
 
 void TetrisPiece::moveLeft() {
@@ -105,7 +104,7 @@ void TetrisPiece::updatePosition() {
     // then updatePosition() should recalculate the positions of all the rectangles
     // this->m_gridController->printGrid();
     std::cerr << "update position without arguments" << std::endl;
-    this->setShapeForType(this->type);
+    this->setShapes();
 }
 
 void TetrisPiece::draw() {
@@ -115,13 +114,13 @@ void TetrisPiece::draw() {
     if (drawBBox)this->m_windowRef->draw(this->bbox);
 }
 
-void TetrisPiece::setShapeForType(TetrominoType type) {
+void TetrisPiece::setShapes() {
     this->setGridForType(this->type);
     int rect = 0;
     for (int row = 0; row < 4 && rect < 4; row++) {
         for (int col = 0; col < 4 && rect < 4; col++) {
             if (this->grid[row][col]) {
-                this->rectShapes[rect] = Monomino::rectangleShapeForType(type);
+                this->rectShapes[rect] = Monomino::rectangleShapeForType(this->type);
                 this->rectShapes[rect].setPosition(this->x+(col*pixels), this->y+(row*pixels));
                 rect++;
             }
@@ -204,7 +203,7 @@ void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
 
 void TetrisPiece::resetWithType(TetrominoType type) {
     this->type = type;
-    this->setShapeForType(type);
+    this->setShapes();
     this->updatePosition(3, 0);
 }
 

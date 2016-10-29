@@ -60,14 +60,11 @@ int main()
         }
         if (spawnPiece) {
             piece.lock();
-            // TETROMINOType nextpiece = mainGrid->queue->peek();
             static TetrominoType nextpiece = static_cast<TetrominoType>(0);
             nextpiece = static_cast<TetrominoType>((static_cast<int>(nextpiece) + 1) % 7);
             piece.printGrid();
-            cout << "color before is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
             piece.resetWithType(nextpiece);
-            // color does not reset here
-            cout << "color after is " << static_cast<int>(piece.color.r) << " " << static_cast<int>(piece.color.g) << " " << static_cast<int>(piece.color.b) << endl;
+
             spawnPiece = false;
         }
         window.clear();

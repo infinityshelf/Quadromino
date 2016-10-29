@@ -15,7 +15,7 @@ private:
     bool grid[4][4];
     static sf::RenderWindow * m_windowRef;
     static GridController * m_gridController;
-    void setShapeForType(TetrominoType type);
+    void setShapes();
     static TetrominoType type;
     void updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape);
     bool offsetFree(int col_off, int row_off);
@@ -23,7 +23,6 @@ public:
     int x, y, col, row;
     sf::RectangleShape rectShapes[4];
     static sf::RectangleShape bbox;
-    static sf::Color color;
     TetrisPiece();
     void lock();
     void setType(TetrominoType type);
@@ -33,7 +32,6 @@ public:
     void updatePosition(int col, int row);
     void updatePosition();
     void draw();
-    static sf::Color colorForType(TetrominoType TETROMINOType);
     void printGrid();
     void setGridForType(TetrominoType TETROMINOType);
     void resetWithType(TetrominoType TETROMINOType);

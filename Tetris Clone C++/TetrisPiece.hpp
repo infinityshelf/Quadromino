@@ -13,6 +13,7 @@ class TetrisPiece
 {
 private:
     bool grid[4][4];
+    int gridSize[2];
     static sf::RenderWindow * m_windowRef;
     static GridController * m_gridController;
     void setShapes();

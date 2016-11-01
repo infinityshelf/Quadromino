@@ -4,7 +4,7 @@ all:
 	make run
 
 run:
-	make no-run
+	make exe
 	./Tetris.exe #-load #-save
 
 exe: main.o TetrisPiece.o GridController.o Monomino.o

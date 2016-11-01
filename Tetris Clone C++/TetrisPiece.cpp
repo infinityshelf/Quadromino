@@ -135,8 +135,9 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
+                std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
                 // if going past bottom row
-                if (this->row+row+1 >= ROWS && row_off) {
+                if (this->row+row+1 >= ROWS && row_off > 0) {
                     free = false;
                     this->lock();
                     break;
@@ -159,6 +160,9 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
                     break;
                 }
             }
+        }
+        if (!free) {
+            break;
         }
     }
     std::cout << ((free) ? "free" : "taken") << std::endl;

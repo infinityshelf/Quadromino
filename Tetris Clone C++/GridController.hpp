@@ -34,5 +34,6 @@ public:
     void setSpaceOccupied(int row, int col, TetrominoType type);
     bool isSpaceOccupied(int row, int col);
     void saveGridToFile();
+    void loadGridFromFile();
 };
 #endif

@@ -102,7 +102,6 @@ char GridController::characterForType(TetrominoType type) {
 }
 
 TetrominoType GridController::typeForCharacter(char place) {
-    std::cout << "WARNING: UNTESTED" << std::endl;
     TetrominoType type = TETROMINO_TYPE_NONE;
     switch(place) {
         case 'O': {
@@ -157,7 +156,7 @@ void GridController::printGrid() {
 }
 
 void GridController::saveGridToFile() {
-    FILE *fp = fopen(fileName, "w+");
+    FILE *fp = fopen(fileName, "w");
     std::cout << "Attempting to open file: " << fileName << std::endl;
     int length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
@@ -172,7 +171,23 @@ void GridController::saveGridToFile() {
         std::cout << "COULD NOT OPEN FILE" << fileName << "\007" << std::endl;
     }
     free(gridString);
+}
 
+void GridController::loadGridFromFile() {
+    FILE *fp = fopen(fileName, "r");
+    int length = ROWS * COLUMNS;
+    char *gridString = (char *)malloc(sizeof(char) * length);
+    if (fp != NULL) {
+        fread(gridString, sizeof(char), length, fp);
+        for (int i = 0; i < length; i++) {
+            this->grid[0][i] = GridController::typeForCharacter(gridString[i]);
+        }
+        this->printGrid();
+        fclose(fp);
+    } else {
+        std::cout << "COULD NOT OPEN FILE" << std::endl;
+    }
+    free(gridString);
 }
 
 void GridController::provideWindow(sf::RenderWindow * window) {
@@ -206,8 +221,7 @@ void GridController::checkRows() {
         }
         if (cleared == true) {
             this->clearRow(row);
-            //TODO method not done
-            //this->shiftRowsAbove(row);
+            this->shiftRowsAbove(row);
         }
     }    
 }
@@ -219,12 +233,10 @@ void GridController::clearRow(int rowToClear) {
 }
 
 void GridController::shiftRowsAbove(int clearedRow) {
-    std::cout << "TODO: THIS CLEARS THE WHOLE GRID, FIX BUG" << std::endl;
-    //assert(0);
     if (clearedRow < ROWS) {
         for (int row = clearedRow; row > 0; row--) {
             for (int col = 0; col < COLUMNS; col++) {
-                this->setSpaceOccupied(col, row, this->grid[col][row-1]);
+                this->grid[row][col] = this->grid[row-1][col];
             }
         }
     }

@@ -15,7 +15,6 @@ using namespace std;
 
 Monomino::Monomino() {
     /*do stuff here*/;
-    std::cout << "ASDFASD";
     int max = TETROMINO_TYPE_MAX;
     for (int i = 0; i < max; i++) {
         switch(i) {
@@ -90,7 +89,7 @@ sf::Color Monomino::colorForType (TetrominoType type) {
             return sf::Color(0xFFFF0000);
         };
         case TETROMINO_TYPE_NONE: {
-            return sf::Color(0xE0B0FF11);
+            return sf::Color(0xE0B0FF66);
         }
     }
 }

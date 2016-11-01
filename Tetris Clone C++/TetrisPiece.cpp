@@ -3,7 +3,7 @@
 #include <string.h>
 #include <random>
 
-const bool drawBBox = true;
+const bool drawBBox = false;
 
 
 const char kGRID_NONE[17] =     "____"
@@ -11,34 +11,34 @@ const char kGRID_NONE[17] =     "____"
                                 "____"
                                 "____";
 
-const char kGRID_O[17] =        "____"
+const char kGRID_O[17] =        "_@@_"
                                 "_@@_"
-                                "_@@_"
-                                "____";
+                                "____"
+                                "y___";
 
 const char kGRID_I[17] =        "____"
                                 "@@@@"
                                 "____"
                                 "____";
 
-const char kGRID_L[17] =        "_@_x"
-                                "_@__"
-                                "_@@_"
+const char kGRID_L[17] =        "__@x"
+                                "@@@_"
+                                "____"
                                 "y___";
 
-const char kGRID_J[17] =        "_@_x"
-                                "_@__"
+const char kGRID_J[17] =        "@__x"
+                                "@@@_"
+                                "____"
+                                "y___";
+
+const char kGRID_S[17] =        "_@@x"
                                 "@@__"
+                                "____"
                                 "y___";
 
-const char kGRID_S[17] =        "_@_x"
+const char kGRID_Z[17] =        "@@_x"
                                 "_@@_"
-                                "__@_"
-                                "y___";
-
-const char kGRID_Z[17] =        "__@x"
-                                "_@@_"
-                                "_@__"
+                                "____"
                                 "y___";
 
 const char kGRID_T[17] =        "_@_x"
@@ -81,49 +81,53 @@ void TetrisPiece::moveDown() {
 }
 
 void TetrisPiece::rotateClockwise() {
-    std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
-    int bounds = 0;
-    int x = this->gridSize[0];
-    int y = this->gridSize[1];
-    if (x == y) {
-        bounds = x&y;
-    }
-    std::cout << "rotateClockwise" << std::endl;
-    bool newGrid[4][4];
-    for (int y = 0; y < bounds; y++) {
-        for (int x = 0; x < bounds; x++) {
-            newGrid[x][y] = this->grid[bounds-1-y][x];
+    if (this->type != TETROMINO_TYPE_O) {
+        std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
+        int bounds = 0;
+        int x = this->gridSize[0];
+        int y = this->gridSize[1];
+        if (x == y) {
+            bounds = x&y;
         }
-    }
-    for (int y = 0; y < bounds; y++) {
-        for (int x = 0; x < bounds; x++) {
-            this->grid[y][x] = newGrid[y][x];
+        std::cout << "rotateClockwise" << std::endl;
+        bool newGrid[4][4];
+        for (int y = 0; y < bounds; y++) {
+            for (int x = 0; x < bounds; x++) {
+                newGrid[x][y] = this->grid[bounds-1-y][x];
+            }
         }
+        for (int y = 0; y < bounds; y++) {
+            for (int x = 0; x < bounds; x++) {
+                this->grid[y][x] = newGrid[y][x];
+            }
+        }
+        this->setShapes();
     }
-    this->setShapes();
 }
 
 void TetrisPiece::rotateCounterClockwise() {
-    std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
-    int bounds = 0;
-    int x = this->gridSize[0];
-    int y = this->gridSize[1];
-    if (x == y) {
-        bounds = x&y;
-    }
-    std::cout << "rotateCounterClockwise" << std::endl;
-    bool newGrid[4][4];
-    for (int y = 0; y < bounds; y++) {
-        for (int x = 0; x < bounds; x++) {
-            newGrid[x][y] = this->grid[y][x];
+        if (this->type != TETROMINO_TYPE_O) {
+        std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
+        int bounds = 0;
+        int x = this->gridSize[0];
+        int y = this->gridSize[1];
+        if (x == y) {
+            bounds = x&y;
         }
-    }
-    for (int y = 0; y < bounds; y++) {
-        for (int x = 0; x < bounds; x++) {
-            this->grid[y][x] = newGrid[bounds-1-y][x];
+        std::cout << "rotateCounterClockwise" << std::endl;
+        bool newGrid[4][4];
+        for (int y = 0; y < bounds; y++) {
+            for (int x = 0; x < bounds; x++) {
+                newGrid[x][y] = this->grid[y][x];
+            }
         }
+        for (int y = 0; y < bounds; y++) {
+            for (int x = 0; x < bounds; x++) {
+                this->grid[y][x] = newGrid[bounds-1-y][x];
+            }
+        }
+        this->setShapes();
     }
-    this->setShapes();
 }
 
 bool TetrisPiece::offsetFree(int col_off, int row_off) {
@@ -132,17 +136,27 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
                 std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
-                if (this->row+row+1 >= ROWS && row_off) {
+                // this check is for when the piece is hitting the bottom of the grid without encountering a piece
+                if (this->row+row+1 >= ROWS && row_off > 0) {
                     free = false;
                     this->lock();
                     break;
                 }
-                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row+row_off)) {
+                // this check is for attempting to move left or right
+                if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row)) {
+                    free = false;
+                    break;
+                }
+                // this check is for attempting to move down into a space occupied by another space
+                if (this->m_gridController->isSpaceOccupied(this->col+col, this->row+row+row_off)) {
                     free = false;
                     this->lock();
                     break;
                 }
             }
+        }
+        if (!free) {
+            break;
         }
     }
     std::cout << ((free) ? "free" : "taken") << std::endl;
@@ -161,6 +175,14 @@ void TetrisPiece::updatePosition(int col, int row) {
         this->updateRectUsingDelta(dx, dy, this->rectShapes[i]);
     }
     this->updateRectUsingDelta(dx, dy, this->bbox);
+}
+
+void TetrisPiece::moveToStartPosition() {
+    int centerx = static_cast <int> (std::ceil(this->gridSize[0] / 2.0f));
+    int centery = static_cast <int> (std::ceil(this->gridSize[1] / 2.0f));
+    std::cout << "centery: " << centery << std::endl;
+    std::cout << "centerx: " << centerx << std::endl;
+    this->updatePosition((COLUMNS / 2) -centerx, 0-2-centery);
 }
 
 void TetrisPiece::lock() {
@@ -187,14 +209,6 @@ void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape
     rect_x = pos.x + dx;
     rect_y = pos.y + dy;
     shape.setPosition(rect_x, rect_y);
-}
-
-void TetrisPiece::updatePosition() {
-    // if this->x or this->y have been changed directly
-    // then updatePosition() should recalculate the positions of all the rectangles
-    // this->m_gridController->printGrid();
-    std::cerr << "update position without arguments" << std::endl;
-    this->setShapes();
 }
 
 void TetrisPiece::draw() {
@@ -309,5 +323,5 @@ void TetrisPiece::reset() {
     this->setType(newType);
     this->setGrid();
     this->setShapes();
-    this->updatePosition(3, 0);
+    this->moveToStartPosition();
 }

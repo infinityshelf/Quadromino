@@ -5,17 +5,34 @@
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
 
-using namespace std;
+static bool save = false;
+static bool load = false;
 
-int main()
-{
+using namespace std;
+int main(int argc, char const *argv[]) {
+    if (argc == 3) {
+        if (std::strncmp(argv[1],"true", 5) == 0) {
+            std::cout << "saving" << std::endl;
+            save = true;
+        } else {
+            std::cout << "not saving" << std::endl;
+        }
+        if (std::strncmp(argv[2],"true", 5) == 0) {
+            std::cout << "loading" << std::endl;
+            load = true;
+        } else {
+            std::cout << "not loading" << std::endl;
+        }
+    }
     int frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     static GridController *mainGrid = GridController::instance();
     mainGrid->provideWindow(&window);
     mainGrid->printGrid();
+    if (load) {
+        mainGrid->loadGridFromFile();
+    }
     bool autoDrop = true;
-    // return 0;
     window.setFramerateLimit(60);
     TetrisPiece piece;
     piece.reset();
@@ -26,10 +43,16 @@ int main()
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
+                if (save) {
+                    mainGrid->saveGridToFile();
+                }
                 window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape or event.key.code == sf::Keyboard::Q) {
+                    if (save) {
+                        mainGrid->saveGridToFile();
+                    }
                     window.close();
                 } else {
                     if (event.key.code == sf::Keyboard::Left) {

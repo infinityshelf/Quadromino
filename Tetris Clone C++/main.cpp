@@ -5,24 +5,26 @@
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
 
-static bool save = false;
-static bool load = false;
-
 using namespace std;
 int main(int argc, char const *argv[]) {
+    bool save = false;
+    bool load = false;
+    const char loadFlag[] = {"-load"};
+    const char saveFlag[] = {"-save"};
     if (argc == 3) {
-        if (std::strncmp(argv[1],"true", 5) == 0) {
-            std::cout << "saving" << std::endl;
-            save = true;
-        } else {
-            std::cout << "not saving" << std::endl;
+        for (int i = 1; i < argc; i++) {
+            if (std::strncmp(argv[i],saveFlag, 6) == 0) {
+                std::cout << "saving" << std::endl;
+                save = true;
+            }
+            if (std::strncmp(argv[i],loadFlag, 6) == 0) {
+                std::cout << "loading" << std::endl;
+                load = true;
+            }
         }
-        if (std::strncmp(argv[2],"true", 5) == 0) {
-            std::cout << "loading" << std::endl;
-            load = true;
-        } else {
-            std::cout << "not loading" << std::endl;
-        }
+    } else if (argc > 3) {
+        std::cout << "too many arguments!" << endl;
+        return 0;
     }
     int frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
@@ -74,6 +76,12 @@ int main(int argc, char const *argv[]) {
                         // when the player presses down and their piece moves down
                         // it takes a second for the piece to move again automatically
                         frameCounter = 0;
+                    }
+                    if (event.key.code == sf::Keyboard::Z) {
+                        mainGrid->saveGridToFile();
+                    }
+                    else if (event.key.code == sf::Keyboard::X) {
+                        mainGrid->loadGridFromFile();
                     }
                 }
             } else if (event.type == sf::Event::KeyReleased) {

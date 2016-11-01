@@ -5,7 +5,7 @@ all:
 
 run:
 	make no-run
-	./Tetris.exe true true
+	./Tetris.exe #-load #-save
 
 no-run: main.o TetrisPiece.o GridController.o Monomino.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o Monomino.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system

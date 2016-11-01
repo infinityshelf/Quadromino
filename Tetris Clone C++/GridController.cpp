@@ -8,6 +8,7 @@ const int windowHeight = pixels * ROWS;
 const bool debug = true;
 const int pixels = 32.0f;
 const char fileName[] = "grid.out";
+int linesCleared = 0;
 
 // typedef enum TETROMINO_TYPES TetrominoType;
 
@@ -27,6 +28,7 @@ GridController::GridController() {
     //     this->grid[0][i] = false;
     // }
     // this->grid[COLUMNS][ROWS] = {TETROMINO_TYPE_NONE};
+    linesCleared = 0;
     for (int y = 0; y < ROWS; y++) {
         // for (int j = 0; i < 22; j++) {
         for (int x = 0; x < COLUMNS; x++) {
@@ -230,6 +232,8 @@ void GridController::clearRow(int rowToClear) {
     for (int col = 0; col < COLUMNS; col++) {
         this->setSpaceOccupied(col, rowToClear, TETROMINO_TYPE_NONE);
     }
+    linesCleared++;
+    std::cout << "cleared " << linesCleared << " lines." << std::endl;
 }
 
 void GridController::shiftRowsAbove(int clearedRow) {

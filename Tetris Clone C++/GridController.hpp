@@ -9,6 +9,7 @@ extern const int windowHeight;
 extern const bool debug;
 extern const int pixels;
 extern const char fileName[];
+extern int linesCleared;
 class TetrisPiece;
 
 class GridController {

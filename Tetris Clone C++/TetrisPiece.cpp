@@ -106,7 +106,7 @@ void TetrisPiece::rotateClockwise() {
 }
 
 void TetrisPiece::rotateCounterClockwise() {
-        if (this->type != TETROMINO_TYPE_O) {
+    if (this->type != TETROMINO_TYPE_O) {
         std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
         int bounds = 0;
         int x = this->gridSize[0];
@@ -135,16 +135,24 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
-                //std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+                // if going past bottom row
                 if (this->row+row+1 >= ROWS && row_off) {
                     free = false;
                     this->lock();
                     break;
                 }
+                // if moving out of the grid left or right
+                if (this->col+col+col_off < 0 || this->col+col+col_off >= COLUMNS) {
+                    free = false;
+                    break;
+                }
+                // these 2 may be able to be consolidated
+                //if the row is occupied
                 if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row)) {
                     free = false;
                     break;
                 }
+                //if the col is occupied
                 if (this->m_gridController->isSpaceOccupied(this->col+col, this->row+row+row_off)) {
                     free = false;
                     this->lock();

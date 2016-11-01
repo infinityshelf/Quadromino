@@ -135,22 +135,28 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
-                //std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+                std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+                // this check is for when the piece is hitting the bottom of the grid without encountering a piece
                 if (this->row+row+1 >= ROWS && row_off > 0) {
                     free = false;
                     this->lock();
                     break;
                 }
+                // this check is for attempting to move left or right
                 if (this->m_gridController->isSpaceOccupied(this->col+col+col_off, this->row+row)) {
                     free = false;
                     break;
                 }
+                // this check is for attempting to move down into a space occupied by another space
                 if (this->m_gridController->isSpaceOccupied(this->col+col, this->row+row+row_off)) {
                     free = false;
                     this->lock();
                     break;
                 }
             }
+        }
+        if (!free) {
+            break;
         }
     }
     std::cout << ((free) ? "free" : "taken") << std::endl;

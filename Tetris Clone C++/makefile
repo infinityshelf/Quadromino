@@ -4,10 +4,10 @@ all:
 	make run
 
 run:
-	make no-run
+	make exe
 	./Tetris.exe true true
 
-no-run: main.o TetrisPiece.o GridController.o Monomino.o
+exe: main.o TetrisPiece.o GridController.o Monomino.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o Monomino.o -o Tetris.exe -lsfml-graphics -lsfml-window -lsfml-system
 
 main.o: main.cpp TetrisPiece.hpp GridController.hpp TetrominoTypes.hpp Monomino.hpp

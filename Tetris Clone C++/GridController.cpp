@@ -51,7 +51,7 @@ void GridController::setSpaceOccupied(int x, int y, TetrominoType type) {
     if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
         std::cout << "setspace called" << std::endl;
         this->grid[y][x] = type;
-        //assert(this->grid[y][x] != TETROMINO_TYPE_NONE);
+        assert(this->grid[y][x] != TETROMINO_TYPE_NONE);
     }
     // std::cout << "setspace called" << std::endl;
     this->printGrid();
@@ -230,7 +230,8 @@ void GridController::checkRows() {
 
 void GridController::clearRow(int rowToClear) {
     for (int col = 0; col < COLUMNS; col++) {
-        this->setSpaceOccupied(col, rowToClear, TETROMINO_TYPE_NONE);
+        //this->setSpaceOccupied(col, rowToClear, TETROMINO_TYPE_NONE);
+        this->grid[rowToClear][col] = TETROMINO_TYPE_NONE;
     }
     linesCleared++;
     std::cout << "cleared " << linesCleared << " lines." << std::endl;

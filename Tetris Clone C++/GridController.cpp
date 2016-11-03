@@ -14,8 +14,6 @@ int score = 0;
 int level = 0;
 bool last_clear_was_a_tetris = false;
 
-// typedef enum TETROMINO_TYPES TetrominoType;
-
 GridController * GridController::s_instance = nullptr;
 sf::RenderWindow * GridController::m_windowref = nullptr;
 
@@ -32,6 +30,9 @@ GridController::GridController() {
             this->setSpaceOccupied(x, y, TETROMINO_TYPE_NONE);
         }
     }
+    this->scoreFont.loadFromFile("sansation.ttf");
+    this->scoreText.setFont(this->scoreFont);
+    this->scoreText.setCharacterSize(40);
 }
 
 GridController::~GridController() {}
@@ -213,14 +214,12 @@ void GridController::draw() {
     bbox.setOutlineColor(sf::Color::White);
     bbox.setOutlineThickness(1);
 
-    sf::Font font;
-    font.loadFromFile("sansation.ttf");
     char scoreString[100];
     sprintf(scoreString, "LEVEL: %d\nLINES: %d\nSCORE: %d", level, totalLinesCleared, score);
-    sf::Text text(scoreString, font, 40);
-    text.setPosition((COLUMNS * 1.5 * pixels)-(text.getLocalBounds().width/2), ROWS * pixels *0.25);
-    text.setFillColor(sf::Color::White);
-    this->m_windowref->draw(text);
+    this->scoreText.setString(scoreString);
+    this->scoreText.setPosition((COLUMNS * 1.5 * pixels)-(this->scoreText.getLocalBounds().width/2), ROWS * pixels *0.25);
+    this->scoreText.setFillColor(sf::Color::White);
+    this->m_windowref->draw(this->scoreText);
     this->m_windowref->draw(bbox);
 }
 

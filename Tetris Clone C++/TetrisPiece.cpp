@@ -192,7 +192,6 @@ void TetrisPiece::lock() {
     this->locked = true;
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 4; ++col) {
-            // this->printGrid();
             // reminder col is x and row is y
             int global_row = this->row+row;
             int global_col = this->col+col;
@@ -238,20 +237,6 @@ void TetrisPiece::setShapes() {
     this->bbox.setFillColor(sf::Color(0xFFFFFF7F));
     this->bbox.setOutlineColor(sf::Color(0xFFFFFFFF));
     this->bbox.setOutlineThickness(3);
-    //this->printGrid();
-}
-
-void TetrisPiece::printGrid() {
-    int max = 4*4;
-    for (int i = 0; i < max; i++) {
-        if (i % 4 == 0) {
-    
-        }
-
-        if (i % 4 == 3) {
-    
-        }
-    }
 }
 
 void TetrisPiece::setGrid() {

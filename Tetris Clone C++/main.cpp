@@ -1,5 +1,6 @@
 // main.cpp
 #include <iostream>
+#include <cstring>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"

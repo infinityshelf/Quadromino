@@ -11,49 +11,6 @@
 
 using namespace std;
 
-//sf::RectangleShape *Monomino::pieces = nullptr;
-
-Monomino::Monomino() {
-    /*do stuff here*/;
-    int max = TETROMINO_TYPE_MAX;
-    for (int i = 0; i < max; i++) {
-        switch(i) {
-            case TETROMINO_TYPE_O: {
-                std::cout << "before: " << &this->pieces[TETROMINO_TYPE_O];
-                this->pieces[i] = Monomino::rectangleShapeForType(TETROMINO_TYPE_O);
-               std::cout << "after: " << &this->pieces[TETROMINO_TYPE_O];
-                break;
-            }
-            case TETROMINO_TYPE_I: {
-                break;
-            }
-            case TETROMINO_TYPE_L: {
-                break;
-            }
-            case TETROMINO_TYPE_J: {
-                break;
-            }
-            case TETROMINO_TYPE_S: {
-                break;
-            }
-            case TETROMINO_TYPE_Z: {
-                break;
-            }
-            case TETROMINO_TYPE_T: {
-                break;
-            }
-            case TETROMINO_TYPE_MAX:{};
-            case TETROMINO_TYPE_NONE: {
-                break;
-            }
-        }
-    }
-}
-
-Monomino::~Monomino() {
-
-}
-
 sf::RectangleShape Monomino::rectangleShapeForType(TetrominoType type) {
     sf::RectangleShape shape;
     sf::Vector2f square = sf::Vector2f(pixels, pixels);
@@ -90,6 +47,9 @@ sf::Color Monomino::colorForType (TetrominoType type) {
         };
         case TETROMINO_TYPE_NONE: {
             return sf::Color(0xE0B0FF66);
+        }
+        default: {
+            return sf::Color(0x00000000);
         }
     }
 }

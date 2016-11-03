@@ -9,7 +9,7 @@ extern const int windowHeight;
 extern const bool debug;
 extern const int pixels;
 extern const char fileName[];
-extern int linesCleared;
+extern int level;
 class TetrisPiece;
 
 class GridController {
@@ -25,6 +25,8 @@ private:
     void shiftRowsAbove(int clearedRow);
     static char characterForType(TetrominoType type);
     static TetrominoType typeForCharacter(char place);
+    sf::Font scoreFont;
+    sf::Text scoreText;
 public:
     ~GridController();
     void draw();

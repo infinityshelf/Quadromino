@@ -35,7 +35,6 @@ public:
     void rotateCounterClockwise();
     void updatePosition(int col, int row);
     void draw();
-    void printGrid();
     void setGrid();
     void reset();
     void moveToStartPosition();

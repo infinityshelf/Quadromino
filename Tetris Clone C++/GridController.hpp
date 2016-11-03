@@ -25,6 +25,8 @@ private:
     void shiftRowsAbove(int clearedRow);
     static char characterForType(TetrominoType type);
     static TetrominoType typeForCharacter(char place);
+    sf::Font scoreFont;
+    sf::Text scoreText;
 public:
     ~GridController();
     void draw();

@@ -4,7 +4,7 @@ all:
 
 run:
 	make binary
-	./Tetris
+	./Tetris -save -load
 
 binary: main.o TetrisPiece.o GridController.o Monomino.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o Monomino.o -o Tetris -lsfml-graphics -lsfml-window -lsfml-system

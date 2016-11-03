@@ -14,23 +14,23 @@ int main(int argc, char const *argv[]) {
     if (argc == 3) {
         for (int i = 1; i < argc; i++) {
             if (std::strncmp(argv[i],saveFlag, 6) == 0) {
-                std::cout << "saving" << std::endl;
+                std::cout << "Saving" << std::endl;
                 save = true;
             }
             if (std::strncmp(argv[i],loadFlag, 6) == 0) {
-                std::cout << "loading" << std::endl;
+                std::cout << "Loading" << std::endl;
                 load = true;
             }
         }
     } else if (argc > 3) {
-        std::cout << "too many arguments!" << endl;
+        std::cout << "Too many arguments!" << endl;
         return 0;
     }
     int frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     static GridController *mainGrid = GridController::instance();
     mainGrid->provideWindow(&window);
-    mainGrid->printGrid();
+    //mainGrid->printGrid();
     if (load) {
         mainGrid->loadGridFromFile();
     }
@@ -77,6 +77,9 @@ int main(int argc, char const *argv[]) {
                         // it takes a second for the piece to move again automatically
                         frameCounter = 0;
                     }
+                    if (event.key.code == sf::Keyboard::C) {
+                        piece.reset();
+                    }
                     if (event.key.code == sf::Keyboard::Z) {
                         mainGrid->saveGridToFile();
                     }
@@ -94,7 +97,7 @@ int main(int argc, char const *argv[]) {
             spawnPiece = true;
         }
         if (spawnPiece) {
-            piece.printGrid();
+            //piece.printGrid();
             piece.reset();
             spawnPiece = false;
         }

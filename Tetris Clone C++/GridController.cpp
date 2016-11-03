@@ -2,13 +2,17 @@
 #include "TetrisPiece.hpp"
 #include <iostream>
 #include <cassert>
+#include <cstdlib>
 
-const int windowWidth = pixels * COLUMNS;
+const int windowWidth = pixels * COLUMNS * 2;
 const int windowHeight = pixels * ROWS;
 const bool debug = true;
 const int pixels = 32.0f;
 const char fileName[] = "grid.out";
-int linesCleared = 0;
+int totalLinesCleared = 0;
+int score = 0;
+int level = 0;
+bool last_clear_was_a_tetris = false;
 
 // typedef enum TETROMINO_TYPES TetrominoType;
 
@@ -17,22 +21,15 @@ sf::RenderWindow * GridController::m_windowref = nullptr;
 
 
 GridController* GridController::instance() {
-    // static GridController instance = GridController();
     static GridController instance = GridController();
-    // std::cout << "instance pointer = " << &instance << std::endl;
     return &instance;
 }
 
 GridController::GridController() {
-    // for (int i = 0; i < ROWS*COLUMNS; i++) {
-    //     this->grid[0][i] = false;
-    // }
-    // this->grid[COLUMNS][ROWS] = {TETROMINO_TYPE_NONE};
-    linesCleared = 0;
+    totalLinesCleared = 0;
     for (int y = 0; y < ROWS; y++) {
-        // for (int j = 0; i < 22; j++) {
         for (int x = 0; x < COLUMNS; x++) {
-            this->grid[y][x] = TETROMINO_TYPE_NONE;
+            this->setSpaceOccupied(x, y, TETROMINO_TYPE_NONE);
         }
     }
 }
@@ -49,12 +46,8 @@ bool GridController::isSpaceOccupied(int x, int y) {
 
 void GridController::setSpaceOccupied(int x, int y, TetrominoType type) {
     if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
-        std::cout << "setspace called" << std::endl;
         this->grid[y][x] = type;
-        assert(this->grid[y][x] != TETROMINO_TYPE_NONE);
     }
-    // std::cout << "setspace called" << std::endl;
-    this->printGrid();
 }
 
 char GridController::characterForType(TetrominoType type) {
@@ -95,7 +88,6 @@ char GridController::characterForType(TetrominoType type) {
         }
         default: {
             place = '#';
-            std::cout << type;
             break;
         }
     }
@@ -159,7 +151,6 @@ void GridController::printGrid() {
 
 void GridController::saveGridToFile() {
     FILE *fp = fopen(fileName, "w");
-    std::cout << "Attempting to open file: " << fileName << std::endl;
     int length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
     for (int i = 0; i < length; i++) {
@@ -168,9 +159,8 @@ void GridController::saveGridToFile() {
     if (fp != NULL) {
         fwrite(gridString, sizeof(char), length, fp);
         fclose(fp);
-        std::cout << "Close file " << fileName << std::endl;
     } else {
-        std::cout << "COULD NOT OPEN FILE" << fileName << "\007" << std::endl;
+        std::cout << "COULD NOT OPEN FILE: " << fileName << "\007" << std::endl;
     }
     free(gridString);
 }
@@ -184,10 +174,10 @@ void GridController::loadGridFromFile() {
         for (int i = 0; i < length; i++) {
             this->grid[0][i] = GridController::typeForCharacter(gridString[i]);
         }
-        this->printGrid();
+        //this->printGrid();
         fclose(fp);
     } else {
-        std::cout << "COULD NOT OPEN FILE" << std::endl;
+        std::cout << "COULD NOT OPEN FILE: " << fileName <<  "\007" << std::endl;
     }
     free(gridString);
 }
@@ -211,9 +201,28 @@ void GridController::draw() {
             }
         }
     }
+    sf::RectangleShape bbox;
+    sf::Vector2f size = sf::Vector2f((COLUMNS * pixels), (ROWS * pixels));
+    bbox.setSize(size);
+    bbox.setPosition(0,0);
+    bbox.setFillColor(sf::Color(0x000000));
+    bbox.setOutlineColor(sf::Color::White);
+    bbox.setOutlineThickness(1);
+
+    sf::Font font;
+    font.loadFromFile("sansation.ttf");
+    char scoreString[100];
+    sprintf(scoreString, "LEVEL: %d\nLINES: %d\nSCORE: %d", level, totalLinesCleared, score);
+    sf::Text text(scoreString, font, 40);
+    text.setPosition((COLUMNS * 1.5 * pixels)-(text.getLocalBounds().width/2), ROWS * pixels *0.25);
+    text.setFillColor(sf::Color::White);
+    this->m_windowref->draw(text);
+    this->m_windowref->draw(bbox);
 }
 
 void GridController::checkRows() {
+    int linesCleared = 0;
+    level = totalLinesCleared / 10;
     for (int row = 0; row < ROWS; row++) {
         bool cleared = true;
         for (int col = 0; col < COLUMNS; col++) {
@@ -222,19 +231,34 @@ void GridController::checkRows() {
             }
         }
         if (cleared == true) {
+            linesCleared++;
             this->clearRow(row);
             this->shiftRowsAbove(row);
         }
-    }    
+    }
+    if (linesCleared == 4 && last_clear_was_a_tetris == true) {
+        score += 2000 * (level + 1);
+        last_clear_was_a_tetris = true;
+    } else if (linesCleared == 4 && last_clear_was_a_tetris == false) {
+        score += 1000 * (level + 1);
+        last_clear_was_a_tetris = true;
+    } else if (linesCleared == 2) {
+        score += 150 * (level + 1);
+        last_clear_was_a_tetris = false;
+    } else if (linesCleared == 3) {
+        score += 350 * (level + 1);
+        last_clear_was_a_tetris = false;
+    } else if (linesCleared == 1) {
+        score += 50 * (level + 1);
+        last_clear_was_a_tetris = false;
+    }
 }
 
 void GridController::clearRow(int rowToClear) {
     for (int col = 0; col < COLUMNS; col++) {
-        //this->setSpaceOccupied(col, rowToClear, TETROMINO_TYPE_NONE);
         this->grid[rowToClear][col] = TETROMINO_TYPE_NONE;
     }
-    linesCleared++;
-    std::cout << "cleared " << linesCleared << " lines." << std::endl;
+    totalLinesCleared++;
 }
 
 void GridController::shiftRowsAbove(int clearedRow) {

@@ -19,9 +19,7 @@ Monomino::Monomino() {
     for (int i = 0; i < max; i++) {
         switch(i) {
             case TETROMINO_TYPE_O: {
-                std::cout << "before: " << &this->pieces[TETROMINO_TYPE_O];
                 this->pieces[i] = Monomino::rectangleShapeForType(TETROMINO_TYPE_O);
-               std::cout << "after: " << &this->pieces[TETROMINO_TYPE_O];
                 break;
             }
             case TETROMINO_TYPE_I: {

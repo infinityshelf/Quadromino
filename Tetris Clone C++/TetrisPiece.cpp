@@ -82,14 +82,14 @@ void TetrisPiece::moveDown() {
 
 void TetrisPiece::rotateClockwise() {
     if (this->type != TETROMINO_TYPE_O) {
-        std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
+
         int bounds = 0;
         int x = this->gridSize[0];
         int y = this->gridSize[1];
         if (x == y) {
             bounds = x&y;
         }
-        std::cout << "rotateClockwise" << std::endl;
+
         bool newGrid[4][4];
         for (int y = 0; y < bounds; y++) {
             for (int x = 0; x < bounds; x++) {
@@ -107,14 +107,14 @@ void TetrisPiece::rotateClockwise() {
 
 void TetrisPiece::rotateCounterClockwise() {
     if (this->type != TETROMINO_TYPE_O) {
-        std::cout << "x " << this->gridSize[0] << "y " << this->gridSize[1] << std::endl;
+
         int bounds = 0;
         int x = this->gridSize[0];
         int y = this->gridSize[1];
         if (x == y) {
             bounds = x&y;
         }
-        std::cout << "rotateCounterClockwise" << std::endl;
+
         bool newGrid[4][4];
         for (int y = 0; y < bounds; y++) {
             for (int x = 0; x < bounds; x++) {
@@ -135,7 +135,7 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (this->grid[row][col]) {
-                std::cout << "checking " << this->col+col << ", " << this->row+row << std::endl;
+        
                 // if going past bottom row
                 if (this->row+row+1 >= ROWS && row_off > 0) {
                     free = false;
@@ -165,7 +165,6 @@ bool TetrisPiece::offsetFree(int col_off, int row_off) {
             break;
         }
     }
-    std::cout << ((free) ? "free" : "taken") << std::endl;
     return free;
 }
 
@@ -186,8 +185,6 @@ void TetrisPiece::updatePosition(int col, int row) {
 void TetrisPiece::moveToStartPosition() {
     int centerx = static_cast <int> (std::ceil(this->gridSize[0] / 2.0f));
     int centery = static_cast <int> (std::ceil(this->gridSize[1] / 2.0f));
-    std::cout << "centery: " << centery << std::endl;
-    std::cout << "centerx: " << centerx << std::endl;
     this->updatePosition((COLUMNS / 2) -centerx, 0-2-centery);
 }
 
@@ -201,12 +198,12 @@ void TetrisPiece::lock() {
             int global_col = this->col+col;
             bool occupied = this->grid[row][col];
             if (occupied) {
-                std::cout << "here!!! TetrisPiece.cpp:87 TetrisPiece::lock" << std::endl;
+        
                 this->m_gridController->setSpaceOccupied(global_col,global_row,this->type);
             }
         }
     }
-    this->m_gridController->printGrid();
+    //this->m_gridController->printGrid();
 }
 
 void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
@@ -241,24 +238,20 @@ void TetrisPiece::setShapes() {
     this->bbox.setFillColor(sf::Color(0xFFFFFF7F));
     this->bbox.setOutlineColor(sf::Color(0xFFFFFFFF));
     this->bbox.setOutlineThickness(3);
-    this->printGrid();
+    //this->printGrid();
 }
 
 void TetrisPiece::printGrid() {
     int max = 4*4;
-    // std::cout << "TetrisPiece::printGrid() start" << std::endl << "printing grid" << std::endl;
-    std::cout << "+----+" << std::endl;
     for (int i = 0; i < max; i++) {
         if (i % 4 == 0) {
-            std::cout << '|';
+    
         }
-        std::cout << ((this->grid[0][i]) ? '@':' ');
+
         if (i % 4 == 3) {
-            std::cout << '|' << std::endl;
+    
         }
     }
-    std::cout << "+----+" << std::endl;
-    // std::cout << "TetrisPiece::printGrid() did end" << std::endl;
 }
 
 void TetrisPiece::setGrid() {
@@ -299,7 +292,6 @@ void TetrisPiece::setGrid() {
             break;
         }
     }
-    std::cout << "type: "<< type << std::endl;
     this->gridSize[0] = 4;
     this->gridSize[1] = 4;
     for (int y = 0; y < 4; y++) {
@@ -314,7 +306,6 @@ void TetrisPiece::setGrid() {
             }
         }
     }
-    std::cout << "this->gridSize[" << this->gridSize[0] << "][" << this->gridSize[1] << "]" << std::endl;
 }
 
 void TetrisPiece::reset() {
@@ -324,7 +315,6 @@ void TetrisPiece::reset() {
     std::uniform_real_distribution<double> dist(1,100);
     int intType = dist(mt);
     intType = intType % 7 + 1;
-    std::cout << "random: " << intType << std::endl;
     TetrominoType newType = static_cast<TetrominoType>(intType);
     this->setType(newType);
     this->setGrid();

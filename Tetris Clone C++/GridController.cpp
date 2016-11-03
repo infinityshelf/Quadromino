@@ -4,11 +4,15 @@
 #include <cassert>
 #include <cstdlib>
 
+#define GRID_OFFSET 0x0000
+#define GRID_LENGTH COLUMNS*ROWS
+#define SCORE_OFFSET GRID_LENGTH
+
 const int windowWidth = pixels * COLUMNS * 2;
 const int windowHeight = pixels * ROWS;
 const bool debug = true;
 const int pixels = 32.0f;
-const char fileName[] = "grid.out";
+const char fileName[] = "tetris.dat";
 int totalLinesCleared = 0;
 int score = 0;
 int level = 0;
@@ -154,14 +158,18 @@ void GridController::printGrid() {
 }
 
 void GridController::saveGridToFile() {
-    FILE *fp = fopen(fileName, "w");
+    FILE *fp = fopen(fileName, "wb");
     int length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
     for (int i = 0; i < length; i++) {
         gridString[i] = GridController::characterForType(this->grid[0][i]);
     }
     if (fp != NULL) {
+        fseek(fp, SEEK_SET, GRID_OFFSET);
         fwrite(gridString, sizeof(char), length, fp);
+        fwrite(&score, sizeof(score), 1, fp);
+        fwrite(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
+        fwrite(&level, sizeof(level), 1, fp);
         fclose(fp);
     } else {
         std::cout << "COULD NOT OPEN FILE: " << fileName << "\007" << std::endl;
@@ -170,11 +178,15 @@ void GridController::saveGridToFile() {
 }
 
 void GridController::loadGridFromFile() {
-    FILE *fp = fopen(fileName, "r");
+    FILE *fp = fopen(fileName, "rb");
     int length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
     if (fp != NULL) {
+        fseek(fp, SEEK_SET, GRID_OFFSET);
         fread(gridString, sizeof(char), length, fp);
+        fread(&score, sizeof(score), 1, fp);
+        fread(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
+        fread(&level, sizeof(level), 1, fp);
         for (int i = 0; i < length; i++) {
             this->grid[0][i] = GridController::typeForCharacter(gridString[i]);
         }
@@ -211,7 +223,7 @@ void GridController::draw() {
     bbox.setPosition(0,0);
     bbox.setFillColor(sf::Color(0x000000));
     bbox.setOutlineColor(sf::Color::White);
-    bbox.setOutlineThickness(1);
+    bbox.setOutlineThickness(3);
 
     sf::Font font;
     font.loadFromFile("sansation.ttf");

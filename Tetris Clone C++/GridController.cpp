@@ -130,6 +130,10 @@ TetrominoType GridController::typeForCharacter(char place) {
             type = TETROMINO_TYPE_NONE;
             break;
         }
+        default: {
+            type = TETROMINO_TYPE_NONE;
+            break;
+        }
     }
     return type;
 

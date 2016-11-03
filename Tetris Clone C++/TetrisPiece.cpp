@@ -51,7 +51,7 @@ GridController*     TetrisPiece::m_gridController =  nullptr;
 TetrominoType       TetrisPiece::type =              TETROMINO_TYPE_I;
 sf::RectangleShape  TetrisPiece::bbox =              sf::RectangleShape();
 
-TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0) {
+TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0), locked(false) {
     this->gridSize[0] = 4;
     this->gridSize[1] = 4;
     this->m_gridController = GridController::instance();

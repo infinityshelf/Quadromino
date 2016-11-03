@@ -219,7 +219,7 @@ void GridController::draw() {
     sprintf(scoreString, "LEVEL: %d\nLINES: %d\nSCORE: %d", level, totalLinesCleared, score);
     sf::Text text(scoreString, font, 40);
     text.setPosition((COLUMNS * 1.5 * pixels)-(text.getLocalBounds().width/2), ROWS * pixels *0.25);
-    text.setFillColor(sf::Color::White);
+    text.setColor(sf::Color::White);
     this->m_windowref->draw(text);
     this->m_windowref->draw(bbox);
 }

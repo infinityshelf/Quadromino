@@ -40,6 +40,7 @@ int main(int argc, char const *argv[]) {
     TetrisPiece piece;
     piece.reset();
     bool spawnPiece = false;
+    bool canInstantDrop = true;
     while (window.isOpen()) {
         frameCounter++;
 
@@ -61,16 +62,10 @@ int main(int argc, char const *argv[]) {
                     if (event.key.code == sf::Keyboard::Left) {
                         piece.moveLeft();
                     }
-                    if (event.key.code == sf::Keyboard::Right) {
+                    else if (event.key.code == sf::Keyboard::Right) {
                         piece.moveRight();
                     }
-                    if (event.key.code == sf::Keyboard::D) {
-                        piece.rotateClockwise();
-                    }
-                    if (event.key.code == sf::Keyboard::A) {
-                        piece.rotateCounterClockwise();
-                    }
-                    if (event.key.code == sf::Keyboard::Down) {
+                    else if (event.key.code == sf::Keyboard::Down) {
                         autoDrop = false;
                         piece.moveDown();
                         // frame counter to 0 to make it so that
@@ -78,10 +73,29 @@ int main(int argc, char const *argv[]) {
                         // it takes a second for the piece to move again automatically
                         frameCounter = 0;
                     }
-                    if (event.key.code == sf::Keyboard::C) {
+                    else if (event.key.code == sf::Keyboard::Up && canInstantDrop) {
+                        int y = piece.row;
+                        // move down
+                        piece.moveDown();
+                        while (y != piece.row) {
+                            // keep moving down if position is still changing
+                            y = piece.row;
+                            piece.moveDown();
+                        }
+                        // instantly lock
+                        piece.lock();
+                        canInstantDrop = false;
+                    }
+                    else if (event.key.code == sf::Keyboard::D) {
+                        piece.rotateClockwise();
+                    }
+                    else if (event.key.code == sf::Keyboard::A) {
+                        piece.rotateCounterClockwise();
+                    }
+                    else if (event.key.code == sf::Keyboard::C) {
                         piece.reset();
                     }
-                    if (event.key.code == sf::Keyboard::Z) {
+                    else if (event.key.code == sf::Keyboard::Z) {
                         mainGrid->saveGridToFile();
                     }
                     else if (event.key.code == sf::Keyboard::X) {
@@ -91,6 +105,10 @@ int main(int argc, char const *argv[]) {
             } else if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Down) {
                     autoDrop = true;
+                }
+                else if (event.key.code == sf::Keyboard::Up) {
+                    // released up
+                    canInstantDrop = true;
                 }
             }
         }

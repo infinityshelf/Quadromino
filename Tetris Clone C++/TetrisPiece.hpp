@@ -25,11 +25,14 @@ private:
     bool rotateFree(bool newGrid[4][4], int bounds);
     bool rotateFree(bool newGrid[4][4], int bounds, int colOff, int rowOff);
 
-    void setGrid(bool newGrid[4][4], int bounds, int colOff, int rowOff);
-    void setGrid(bool newGrid[4][4], int bounds);
     void setGrid(bool newGrid[4][4]);
+    void setGrid(bool newGrid[4][4], int bounds);
+    void setGrid(bool newGrid[4][4], int bounds, int colOff, int rowOff);
 public:
-    int x, y, col, row;
+    // x, y are pixel-based positions
+    int x, y;
+    // col, row are grid-based positions
+    int col, row;
     sf::RectangleShape rectShapes[4];
     static sf::RectangleShape bbox;
     TetrisPiece();

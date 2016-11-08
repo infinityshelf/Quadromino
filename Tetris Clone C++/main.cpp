@@ -40,6 +40,7 @@ int main(int argc, char const *argv[]) {
     TetrisPiece piece;
     piece.reset();
     bool spawnPiece = false;
+    bool canInstantDrop = true;
     while (window.isOpen()) {
         frameCounter++;
 
@@ -72,7 +73,7 @@ int main(int argc, char const *argv[]) {
                         // it takes a second for the piece to move again automatically
                         frameCounter = 0;
                     }
-                    else if (event.key.code == sf::Keyboard::Up) {
+                    else if (event.key.code == sf::Keyboard::Up && canInstantDrop) {
                         int y = piece.row;
                         // move down
                         piece.moveDown();
@@ -83,6 +84,7 @@ int main(int argc, char const *argv[]) {
                         }
                         // instantly lock
                         piece.lock();
+                        canInstantDrop = false;
                     }
                     else if (event.key.code == sf::Keyboard::D) {
                         piece.rotateClockwise();
@@ -103,6 +105,10 @@ int main(int argc, char const *argv[]) {
             } else if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Down) {
                     autoDrop = true;
+                }
+                else if (event.key.code == sf::Keyboard::Up) {
+                    // released up
+                    canInstantDrop = true;
                 }
             }
         }

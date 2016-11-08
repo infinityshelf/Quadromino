@@ -158,7 +158,6 @@ void GridController::printGrid() {
 void GridController::saveGridToFile() {
     FILE *fp = fopen(fileName, "wb");
     size_t length = ROWS * COLUMNS;
-    // char *gridString = (char *)malloc(sizeof(char) * length);
     char *gridString = new char[length];
     for (int i = 0; i < (int) length; i++) {
         gridString[i] = GridController::characterForType(this->grid[0][i]);
@@ -179,7 +178,6 @@ void GridController::saveGridToFile() {
 void GridController::loadGridFromFile() {
     FILE *fp = fopen(fileName, "rb");
     size_t length = ROWS * COLUMNS;
-    // char *gridString = (char *)malloc(sizeof(char) * length);
     char *gridString = new char[length];
     if (fp != NULL) {
         fseek(fp, SEEK_SET, 0);

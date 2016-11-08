@@ -2,9 +2,10 @@
 
 const int windowWidth = pixels * COLUMNS * 2;
 const int windowHeight = pixels * ROWS;
-const bool debug = true;
+const bool debug = false;
 const int pixels = 32;
 const char fileName[] = "tetris.dat";
+const char fontName[] = "sansation.ttf";
 int totalLinesCleared = 0;
 int score = 0;
 int level = 0;
@@ -26,7 +27,7 @@ GridController::GridController() {
             this->setSpaceOccupied(x, y, TETROMINO_TYPE_NONE);
         }
     }
-    this->scoreFont.loadFromFile("sansation.ttf");
+    this->scoreFont.loadFromFile(fontName);
     this->scoreText.setFont(this->scoreFont);
     this->scoreText.setCharacterSize(40);
 }
@@ -158,7 +159,7 @@ void GridController::saveGridToFile() {
     FILE *fp = fopen(fileName, "wb");
     size_t length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < (int) length; i++) {
         gridString[i] = GridController::characterForType(this->grid[0][i]);
     }
     if (fp != NULL) {
@@ -184,7 +185,7 @@ void GridController::loadGridFromFile() {
         fread(&score, sizeof(score), 1, fp);
         fread(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
         fread(&level, sizeof(level), 1, fp);
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < (int) length; i++) {
             this->grid[0][i] = GridController::typeForCharacter(gridString[i]);
         }
         //this->printGrid();

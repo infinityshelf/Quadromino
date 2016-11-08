@@ -24,8 +24,8 @@ private:
 
     bool rotateFree(bool newGrid[4][4], int bounds);
     bool rotateFree(bool newGrid[4][4], int bounds, int colOff, int rowOff);
-    void applyRotation(bool newGrid[4][4], int bounds, int colOff, int rowOff);
-    
+
+    void setGrid(bool newGrid[4][4], int bounds, int colOff, int rowOff);
     void setGrid(bool newGrid[4][4], int bounds);
     void setGrid(bool newGrid[4][4]);
 public:

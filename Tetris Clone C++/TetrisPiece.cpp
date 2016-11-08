@@ -107,7 +107,7 @@ bool TetrisPiece::rotateFree(bool newGrid[4][4], int bounds, int colOff, int row
     if (debug) std::cout << "rotate " << ((rotateFree) ? "free" : "not free") << std::endl;
     return rotateFree;
 }
-void TetrisPiece::applyRotation(bool newGrid[4][4], int bounds, int colOff, int rowOff) {
+void TetrisPiece::setGrid(bool newGrid[4][4], int bounds, int colOff, int rowOff) {
     this->setGrid(newGrid, bounds);
     this->setShapes();
     this->updatePosition(colOff, rowOff);
@@ -137,17 +137,17 @@ void TetrisPiece::rotateClockwise() {
             }
         }
         if (this->rotateFree(transposedGrid, bounds, this->col, this->row)) {
-            this->applyRotation(transposedGrid, bounds, this->col, this->row);
+            this->setGrid(transposedGrid, bounds, this->col, this->row);
         } else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row)) {
-            this->applyRotation(transposedGrid, bounds, this->col-1, this->row);
+            this->setGrid(transposedGrid, bounds, this->col-1, this->row);
         } else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row-1)) {
-            this->applyRotation(transposedGrid, bounds, this->col-1, this->row-1);
+            this->setGrid(transposedGrid, bounds, this->col-1, this->row-1);
         } else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row)) {
-            this->applyRotation(transposedGrid, bounds, this->col+1, this->row);
+            this->setGrid(transposedGrid, bounds, this->col+1, this->row);
         } else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row-1)) {
-            this->applyRotation(transposedGrid, bounds, this->col+1, this->row-1);
+            this->setGrid(transposedGrid, bounds, this->col+1, this->row-1);
         } else if (this->rotateFree(transposedGrid, bounds, this->col, this->row-1)) {
-            this->applyRotation(transposedGrid, bounds, this->col, this->row-1);
+            this->setGrid(transposedGrid, bounds, this->col, this->row-1);
         }
     }
 }
@@ -185,17 +185,17 @@ void TetrisPiece::rotateCounterClockwise() {
             }
         }
         if (this->rotateFree(rotatedGrid, bounds, this->col, this->row)) {
-            this->applyRotation(rotatedGrid, bounds, this->col, this->row);
+            this->setGrid(rotatedGrid, bounds, this->col, this->row);
         } else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
-            this->applyRotation(rotatedGrid, bounds, this->col-1, this->row);
+            this->setGrid(rotatedGrid, bounds, this->col-1, this->row);
         } else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row-1)) {
-            this->applyRotation(rotatedGrid, bounds, this->col-1, this->row-1);
+            this->setGrid(rotatedGrid, bounds, this->col-1, this->row-1);
         } else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row)) {
-            this->applyRotation(rotatedGrid, bounds, this->col+1, this->row);
+            this->setGrid(rotatedGrid, bounds, this->col+1, this->row);
         } else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row-1)) {
-            this->applyRotation(rotatedGrid, bounds, this->col+1, this->row-1);
+            this->setGrid(rotatedGrid, bounds, this->col+1, this->row-1);
         } else if (this->rotateFree(rotatedGrid, bounds, this->col, this->row-1)) {
-            this->applyRotation(rotatedGrid, bounds, this->col, this->row-1);
+            this->setGrid(rotatedGrid, bounds, this->col, this->row-1);
         }
     }
 }

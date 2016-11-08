@@ -157,7 +157,7 @@ void TetrisPiece::setGrid(bool newGrid[4][4]) {
 void TetrisPiece::setGrid(bool newGrid[4][4], int bounds) {
     for (int x = 0; x < bounds; x++) {
         for (int y = 0; y < bounds; y++) {
-            this->grid[y][x] = newGrid[y][x];  
+            this->grid[y][x] = newGrid[y][x];
         }
     }
 }
@@ -188,15 +188,20 @@ void TetrisPiece::rotateCounterClockwise() {
         }
         if (this->rotateFree(rotatedGrid, bounds, this->col, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row);
-        } else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
+        }
+        else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row);
-        } else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row-1)) {
+        }
+        else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row-1);
-        } else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row)) {
+        }
+        else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row);
-        } else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row-1)) {
+        }
+        else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row-1);
-        } else if (this->rotateFree(rotatedGrid, bounds, this->col, this->row-1)) {
+        }
+        else if (this->rotateFree(rotatedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row-1);
         }
     }
@@ -207,7 +212,7 @@ bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (offsetGrid[row][col]) {
-        
+
                 // if going past bottom row
                 if (this->row+row+1 >= ROWS && rowOff > 0) {
                     free = false;
@@ -273,7 +278,7 @@ void TetrisPiece::lock() {
             int global_col = this->col+col;
             bool occupied = this->grid[row][col];
             if (occupied) {
-        
+
                 this->m_gridController->setSpaceOccupied(global_col,global_row,this->type);
             }
         }

@@ -27,6 +27,7 @@
 Tetris
 *.out
 *.app
+tetris.dat
 
 # Editor-specific files
 *.sublime-project

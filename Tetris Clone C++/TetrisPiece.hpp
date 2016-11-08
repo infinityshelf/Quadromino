@@ -19,7 +19,15 @@ private:
     void setShapes();
     static TetrominoType type;
     void updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape);
-    bool offsetFree(int col_off, int row_off);
+    bool offsetFree(int colOff, int rowOff);
+    bool offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock);
+
+    bool rotateFree(bool newGrid[4][4], int bounds);
+    bool rotateFree(bool newGrid[4][4], int bounds, int colOff, int rowOff);
+    void applyRotation(bool newGrid[4][4], int bounds, int colOff, int rowOff);
+    
+    void setGrid(bool newGrid[4][4], int bounds);
+    void setGrid(bool newGrid[4][4]);
 public:
     int x, y, col, row;
     sf::RectangleShape rectShapes[4];
@@ -28,6 +36,7 @@ public:
     void lock();
     bool locked;
     void setType(TetrominoType type);
+    TetrominoType getType();
     void moveLeft();
     void moveRight();
     void moveDown();
@@ -35,7 +44,8 @@ public:
     void rotateCounterClockwise();
     void updatePosition(int col, int row);
     void draw();
-    void setGrid();
+    void setGridForType(TetrominoType tetrominoType);
+    void setGridForType();
     void reset();
     void moveToStartPosition();
 };

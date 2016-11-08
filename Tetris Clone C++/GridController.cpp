@@ -1,18 +1,11 @@
 #include "GridController.hpp"
-#include "TetrisPiece.hpp"
-#include <iostream>
-#include <cassert>
-#include <cstdlib>
-
-#define GRID_OFFSET 0x0000
-#define GRID_LENGTH COLUMNS*ROWS
-#define SCORE_OFFSET GRID_LENGTH
 
 const int windowWidth = pixels * COLUMNS * 2;
 const int windowHeight = pixels * ROWS;
-const bool debug = true;
-const int pixels = 32.0f;
+const bool debug = false;
+const int pixels = 32;
 const char fileName[] = "tetris.dat";
+const char fontName[] = "sansation.ttf";
 int totalLinesCleared = 0;
 int score = 0;
 int level = 0;
@@ -34,7 +27,7 @@ GridController::GridController() {
             this->setSpaceOccupied(x, y, TETROMINO_TYPE_NONE);
         }
     }
-    this->scoreFont.loadFromFile("sansation.ttf");
+    this->scoreFont.loadFromFile(fontName);
     this->scoreText.setFont(this->scoreFont);
     this->scoreText.setCharacterSize(40);
 }
@@ -53,6 +46,10 @@ void GridController::setSpaceOccupied(int x, int y, TetrominoType type) {
     if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
         this->grid[y][x] = type;
     }
+}
+
+TetrominoType GridController::typeAtSpace(int row, int col) {
+    return this->grid[row][col];
 }
 
 char GridController::characterForType(TetrominoType type) {
@@ -101,7 +98,7 @@ char GridController::characterForType(TetrominoType type) {
 }
 
 TetrominoType GridController::typeForCharacter(char place) {
-    TetrominoType type = TETROMINO_TYPE_NONE;
+    TetrominoType type;
     switch(place) {
         case 'O': {
             type = TETROMINO_TYPE_O;
@@ -160,13 +157,13 @@ void GridController::printGrid() {
 
 void GridController::saveGridToFile() {
     FILE *fp = fopen(fileName, "wb");
-    int length = ROWS * COLUMNS;
+    size_t length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < (int) length; i++) {
         gridString[i] = GridController::characterForType(this->grid[0][i]);
     }
     if (fp != NULL) {
-        fseek(fp, SEEK_SET, GRID_OFFSET);
+        fseek(fp, SEEK_SET, 0);
         fwrite(gridString, sizeof(char), length, fp);
         fwrite(&score, sizeof(score), 1, fp);
         fwrite(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
@@ -180,15 +177,15 @@ void GridController::saveGridToFile() {
 
 void GridController::loadGridFromFile() {
     FILE *fp = fopen(fileName, "rb");
-    int length = ROWS * COLUMNS;
+    size_t length = ROWS * COLUMNS;
     char *gridString = (char *)malloc(sizeof(char) * length);
     if (fp != NULL) {
-        fseek(fp, SEEK_SET, GRID_OFFSET);
+        fseek(fp, SEEK_SET, 0);
         fread(gridString, sizeof(char), length, fp);
         fread(&score, sizeof(score), 1, fp);
         fread(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
         fread(&level, sizeof(level), 1, fp);
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < (int) length; i++) {
             this->grid[0][i] = GridController::typeForCharacter(gridString[i]);
         }
         //this->printGrid();
@@ -229,7 +226,7 @@ void GridController::draw() {
     char scoreString[100];
     sprintf(scoreString, "LEVEL: %d\nLINES: %d\nSCORE: %d", level, totalLinesCleared, score);
     this->scoreText.setString(scoreString);
-    this->scoreText.setPosition((COLUMNS * 1.5 * pixels)-(this->scoreText.getLocalBounds().width/2), ROWS * pixels *0.25);
+    this->scoreText.setPosition((COLUMNS * 1.5f * pixels)-(this->scoreText.getLocalBounds().width/2), ROWS * pixels *0.25f);
     this->scoreText.setFillColor(sf::Color::White);
     this->m_windowref->draw(this->scoreText);
     this->m_windowref->draw(bbox);

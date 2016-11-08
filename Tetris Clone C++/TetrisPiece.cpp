@@ -169,7 +169,9 @@ void TetrisPiece::rotateCounterClockwise() {
         int width = this->gridSize[0];
         int height = this->gridSize[1];
         if (width == height) {
-            bounds = width&height;
+            bounds = width;
+        } else {
+            return;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];

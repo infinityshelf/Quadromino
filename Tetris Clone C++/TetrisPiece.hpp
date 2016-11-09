@@ -40,8 +40,8 @@ public:
     void moveLeft();
     void moveRight();
     void moveDown();
-    void rotateClockwise();
-    void rotateCounterClockwise();
+    bool rotateClockwise();
+    bool rotateCounterClockwise();
     void updatePosition(int col, int row);
     void draw();
     void setGridForType(TetrominoType tetrominoType);

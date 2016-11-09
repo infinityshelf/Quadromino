@@ -65,10 +65,12 @@ int main(int argc, char const *argv[]) {
                         piece.moveRight();
                     }
                     if (event.key.code == sf::Keyboard::D) {
-                        piece.rotateClockwise();
+                        if (piece.rotateClockwise()) {
+                        }
                     }
                     if (event.key.code == sf::Keyboard::A) {
-                        piece.rotateCounterClockwise();
+                        if (piece.rotateCounterClockwise()) {
+                        }
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         autoDrop = false;

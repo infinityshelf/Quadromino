@@ -3,7 +3,6 @@
 
 const bool drawBBox = false;
 
-
 const char kGRID_NONE[17] =     "____"
                                 "____"
                                 "____"
@@ -113,7 +112,8 @@ void TetrisPiece::setGrid(bool newGrid[4][4], int bounds, int colOff, int rowOff
     this->updatePosition(colOff, rowOff);
 }
 
-void TetrisPiece::rotateClockwise() {
+bool TetrisPiece::rotateClockwise() {
+    bool rotated = false;
     if (debug) std::cout << "clockwise" << std::endl;
     if (this->type != TETROMINO_TYPE_O) {
 
@@ -121,7 +121,9 @@ void TetrisPiece::rotateClockwise() {
         int width = this->gridSize[0];
         int height = this->gridSize[1];
         if (width == height) {
-            bounds = width&height;
+            bounds = width;
+        } else {
+            return rotated;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -138,18 +140,25 @@ void TetrisPiece::rotateClockwise() {
         }
         if (this->rotateFree(transposedGrid, bounds, this->col, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col, this->row);
+            rotated = true;
         } else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col-1, this->row);
+            rotated = true;
         } else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col-1, this->row-1);
+            rotated = true;
         } else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col+1, this->row);
+            rotated = true;
         } else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col+1, this->row-1);
+            rotated = true;
         } else if (this->rotateFree(transposedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col, this->row-1);
+            rotated = true;
         }
     }
+    return rotated;
 }
 void TetrisPiece::setGrid(bool newGrid[4][4]) {
     this->setGrid(newGrid, 4);
@@ -162,7 +171,8 @@ void TetrisPiece::setGrid(bool newGrid[4][4], int bounds) {
     }
 }
 
-void TetrisPiece::rotateCounterClockwise() {
+bool TetrisPiece::rotateCounterClockwise() {
+    bool rotated = false;
     if (this->type != TETROMINO_TYPE_O) {
 
         int bounds = 0;
@@ -171,7 +181,7 @@ void TetrisPiece::rotateCounterClockwise() {
         if (width == height) {
             bounds = width;
         } else {
-            return;
+            return rotated;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -188,18 +198,25 @@ void TetrisPiece::rotateCounterClockwise() {
         }
         if (this->rotateFree(rotatedGrid, bounds, this->col, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row);
+            rotated = true;
         } else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row);
+            rotated = true;
         } else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row-1);
+            rotated = true;
         } else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row);
+            rotated = true;
         } else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row-1);
+            rotated = true;
         } else if (this->rotateFree(rotatedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row-1);
+            rotated = true;
         }
     }
+    return rotated;
 }
 
 bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock) {

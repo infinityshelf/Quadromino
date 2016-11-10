@@ -3,14 +3,14 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
+#include "Grids.hpp"
 #include "Monomino.hpp"
 #include "TetrominoTypes.hpp"
 #include <iostream>
 
 class GridController;
 
-class TetrisPiece
-{
+class TetrisPiece {
 private:
     bool grid[4][4];
     int gridSize[2];
@@ -33,6 +33,7 @@ public:
     int x, y;
     // col, row are grid-based positions
     int col, row;
+    int * frameCounter;
     sf::RectangleShape rectShapes[4];
     static sf::RectangleShape bbox;
     TetrisPiece();

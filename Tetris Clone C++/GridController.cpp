@@ -1,7 +1,7 @@
 #include "GridController.hpp"
 
-const int windowWidth = pixels * COLUMNS * 2;
-const int windowHeight = pixels * ROWS;
+const unsigned int windowWidth = pixels * COLUMNS * 2;
+const unsigned int windowHeight = pixels * ROWS;
 const bool debug = true;
 const int pixels = 32;
 const char fileName[] = "tetris.dat";

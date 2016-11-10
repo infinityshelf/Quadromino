@@ -1,6 +1,5 @@
 // main.cpp
 #include <iostream>
-#include <cstring>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
@@ -27,7 +26,8 @@ int main(int argc, char const *argv[]) {
         std::cout << "Too many arguments!" << endl;
         return 0;
     }
-    int frameCounter = 0;
+    static int frameCounter;
+    frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     static GridController *mainGrid = GridController::instance();
     mainGrid->provideWindow(&window);
@@ -39,6 +39,7 @@ int main(int argc, char const *argv[]) {
     window.setFramerateLimit(60);
     TetrisPiece piece;
     piece.reset();
+    piece.frameCounter = &frameCounter;
     bool spawnPiece = false;
     bool canInstantDrop = true;
     while (window.isOpen()) {
@@ -65,14 +66,6 @@ int main(int argc, char const *argv[]) {
                     else if (event.key.code == sf::Keyboard::Right) {
                         piece.moveRight();
                     }
-                    if (event.key.code == sf::Keyboard::D) {
-                        if (piece.rotateClockwise()) {
-                        }
-                    }
-                    if (event.key.code == sf::Keyboard::A) {
-                        if (piece.rotateCounterClockwise()) {
-                        }
-                    }
                     else if (event.key.code == sf::Keyboard::Down) {
                         autoDrop = false;
                         piece.moveDown();
@@ -95,10 +88,14 @@ int main(int argc, char const *argv[]) {
                         canInstantDrop = false;
                     }
                     else if (event.key.code == sf::Keyboard::D) {
-                        piece.rotateClockwise();
+                        if (piece.rotateClockwise()) {
+
+                        }
                     }
                     else if (event.key.code == sf::Keyboard::A) {
-                        piece.rotateCounterClockwise();
+                        if (piece.rotateCounterClockwise()){
+
+                        }
                     }
                     else if (event.key.code == sf::Keyboard::C) {
                         piece.reset();

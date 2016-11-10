@@ -3,46 +3,6 @@
 
 const bool drawBBox = false;
 
-const char kGRID_NONE[17] =     "____"
-                                "____"
-                                "____"
-                                "____";
-
-const char kGRID_O[17] =        "_@@_"
-                                "_@@_"
-                                "____"
-                                "y___";
-
-const char kGRID_I[17] =        "____"
-                                "@@@@"
-                                "____"
-                                "____";
-
-const char kGRID_L[17] =        "__@x"
-                                "@@@_"
-                                "____"
-                                "y___";
-
-const char kGRID_J[17] =        "@__x"
-                                "@@@_"
-                                "____"
-                                "y___";
-
-const char kGRID_S[17] =        "_@@x"
-                                "@@__"
-                                "____"
-                                "y___";
-
-const char kGRID_Z[17] =        "@@_x"
-                                "_@@_"
-                                "____"
-                                "y___";
-
-const char kGRID_T[17] =        "_@_x"
-                                "@@@_"
-                                "____"
-                                "y___";
-
 sf::RenderWindow*   TetrisPiece::m_windowRef =       nullptr;
 GridController*     TetrisPiece::m_gridController =  nullptr;
 TetrominoType       TetrisPiece::type =              TETROMINO_TYPE_I;
@@ -112,18 +72,28 @@ void TetrisPiece::setGrid(bool newGrid[4][4], int bounds, int colOff, int rowOff
     this->updatePosition(colOff, rowOff);
 }
 
+void TetrisPiece::setGrid(bool newGrid[4][4]) {
+    this->setGrid(newGrid, 4);
+}
+void TetrisPiece::setGrid(bool newGrid[4][4], int bounds) {
+    for (int x = 0; x < bounds; x++) {
+        for (int y = 0; y < bounds; y++) {
+            this->grid[y][x] = newGrid[y][x];
+        }
+    }
+}
+
 bool TetrisPiece::rotateClockwise() {
-    bool rotated = false;
+    bool rotated = true;
     if (debug) std::cout << "clockwise" << std::endl;
     if (this->type != TETROMINO_TYPE_O) {
-
         int bounds = 0;
         int width = this->gridSize[0];
         int height = this->gridSize[1];
         if (width == height) {
             bounds = width;
         } else {
-            return rotated;
+            return false;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -140,53 +110,47 @@ bool TetrisPiece::rotateClockwise() {
         }
         if (this->rotateFree(transposedGrid, bounds, this->col, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col, this->row);
-            rotated = true;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col-1, this->row);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col-1, this->row-1);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col+1, this->row);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col+1, this->row-1);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col, this->row-1);
-            rotated = true;
+            *this->frameCounter = 0;
+        } else {
+            rotated = false;
         }
+    } else {
+        rotated = false;
     }
     return rotated;
 }
-void TetrisPiece::setGrid(bool newGrid[4][4]) {
-    this->setGrid(newGrid, 4);
-}
-void TetrisPiece::setGrid(bool newGrid[4][4], int bounds) {
-    for (int x = 0; x < bounds; x++) {
-        for (int y = 0; y < bounds; y++) {
-            this->grid[y][x] = newGrid[y][x];
-        }
-    }
-}
 
 bool TetrisPiece::rotateCounterClockwise() {
-    bool rotated = false;
+    bool rotated = true;
+    if (debug) std::cout << "counterclockwise" << std::endl;
     if (this->type != TETROMINO_TYPE_O) {
-
         int bounds = 0;
         int width = this->gridSize[0];
         int height = this->gridSize[1];
         if (width == height) {
             bounds = width;
         } else {
-            return rotated;
+            std::cout << "ERR" << std::endl;
+            return false;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -203,28 +167,32 @@ bool TetrisPiece::rotateCounterClockwise() {
         }
         if (this->rotateFree(rotatedGrid, bounds, this->col, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row-1);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row-1);
-            rotated = true;
+            *this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row-1);
-            rotated = true;
+            *this->frameCounter = 0;
+        } else {
+            rotated = false;
         }
+    } else {
+        rotated = false;
     }
     return rotated;
 }

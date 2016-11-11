@@ -113,23 +113,23 @@ bool TetrisPiece::rotateClockwise() {
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col-1, this->row);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col-1, this->row-1);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(transposedGrid, bounds, this->col+1, this->row);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col+1, this->row-1);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(transposedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(transposedGrid, bounds, this->col, this->row-1);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         } else {
             rotated = false;
         }
@@ -167,27 +167,27 @@ bool TetrisPiece::rotateCounterClockwise() {
         }
         if (this->rotateFree(rotatedGrid, bounds, this->col, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row-1);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col+1, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col+1, this->row-1);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col, this->row-1)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row-1);
-            *this->frameCounter = 0;
+            this->frameCounter = 0;
         } else {
             rotated = false;
         }

@@ -33,7 +33,7 @@ public:
     int x, y;
     // col, row are grid-based positions
     int col, row;
-    int * frameCounter;
+    unsigned int frameCounter;
     sf::RectangleShape rectShapes[4];
     static sf::RectangleShape bbox;
     TetrisPiece();

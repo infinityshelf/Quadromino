@@ -2,7 +2,7 @@
 
 const int windowWidth = pixels * COLUMNS * 2;
 const int windowHeight = pixels * ROWS;
-const bool debug = false;
+const bool debug = true;
 const int pixels = 32;
 const char fileName[] = "tetris.dat";
 const char fontName[] = "sansation.ttf";

@@ -2,8 +2,8 @@
 #define GRIDCONTROLLER_H
 #include "TetrisPiece.hpp"
 #include "TetrominoTypes.hpp"
-#define ROWS 20
-#define COLUMNS 10
+const int ROWS = 20;
+const int COLUMNS = 10;
 extern const int windowWidth;
 extern const int windowHeight;
 extern const bool debug;

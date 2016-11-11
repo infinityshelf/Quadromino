@@ -1,6 +1,5 @@
 // main.cpp
 #include <iostream>
-#include <cstring>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
@@ -27,7 +26,6 @@ int main(int argc, char const *argv[]) {
         std::cout << "Too many arguments!" << endl;
         return 0;
     }
-    int frameCounter = 0;
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     static GridController *mainGrid = GridController::instance();
     mainGrid->provideWindow(&window);
@@ -39,10 +37,11 @@ int main(int argc, char const *argv[]) {
     window.setFramerateLimit(60);
     TetrisPiece piece;
     piece.reset();
+    piece.frameCounter = 0;
     bool spawnPiece = false;
     bool canInstantDrop = true;
     while (window.isOpen()) {
-        frameCounter++;
+        piece.frameCounter++;
 
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -71,7 +70,7 @@ int main(int argc, char const *argv[]) {
                         // frame counter to 0 to make it so that
                         // when the player presses down and their piece moves down
                         // it takes a second for the piece to move again automatically
-                        frameCounter = 0;
+                        piece.frameCounter = 0;
                     }
                     else if (event.key.code == sf::Keyboard::Up && canInstantDrop) {
                         int y = piece.row;
@@ -121,8 +120,8 @@ int main(int argc, char const *argv[]) {
             spawnPiece = false;
         }
         window.clear();
-        if (frameCounter % 60 == 59) {
-            frameCounter %= 60;
+        if (piece.frameCounter % 60 == 59) {
+            piece.frameCounter %= 60;
             if (autoDrop) {
                 piece.moveDown();
             }

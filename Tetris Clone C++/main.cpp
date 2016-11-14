@@ -118,8 +118,14 @@ int main(int argc, char const *argv[]) {
             spawnPiece = false;
         }
         window.clear();
-        if (piece.frameCounter % 60 == 59) {
-            piece.frameCounter %= 60;
+        unsigned int difficultyFrame;
+        if (level < 20) {
+            difficultyFrame = 20 + (level * 2);
+        } else {
+            difficultyFrame = 20;
+        }
+        if (piece.frameCounter % difficultyFrame == difficultyFrame-1) {
+            piece.frameCounter %= difficultyFrame;
             if (autoDrop) {
                 piece.moveDown();
             }

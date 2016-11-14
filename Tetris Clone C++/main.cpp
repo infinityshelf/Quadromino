@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
-
+#include "TLogo128.h"
 using namespace std;
 int main(int argc, char const *argv[]) {
     bool save = false;
@@ -27,6 +27,7 @@ int main(int argc, char const *argv[]) {
         return 0;
     }
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
+    window.setIcon(128,128, teris_logo_image.pixel_data);
     static GridController *mainGrid = GridController::instance();
     if (load) {
         mainGrid->loadGridFromFile();

@@ -1,5 +1,5 @@
-#ifndef MONOMINO_H
-#define MONOMINO_H
+#ifndef TETRIS_MONOMINO_H
+#define TETRIS_MONOMINO_H
 #include "TetrisPiece.hpp"
 #include "TetrominoTypes.hpp"
 #include <SFML/Graphics.hpp>

@@ -3,7 +3,6 @@
 
 const bool drawBBox = false;
 
-sf::RenderWindow*   TetrisPiece::m_windowRef =       nullptr;
 GridController*     TetrisPiece::m_gridController =  nullptr;
 TetrominoType       TetrisPiece::type =              TETROMINO_TYPE_I;
 sf::RectangleShape  TetrisPiece::bbox =              sf::RectangleShape();
@@ -12,7 +11,6 @@ TetrisPiece::TetrisPiece() : x(0), y(0), col(0), row(0), locked(false) {
     this->gridSize[0] = 4;
     this->gridSize[1] = 4;
     this->m_gridController = GridController::instance();
-    this->m_windowRef = this->m_gridController->window_instance();
 }
 
 void TetrisPiece::setType(TetrominoType type) {
@@ -284,11 +282,11 @@ void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape
     shape.setPosition(rect_x, rect_y);
 }
 
-void TetrisPiece::draw() {
+void TetrisPiece::drawToWindow(sf::RenderWindow &window) {
     for (int i = 0; i < 4; i++) {
-        this->m_windowRef->draw(this->rectShapes[i]);
+        window.draw(this->rectShapes[i]);
     }
-    if (drawBBox) this->m_windowRef->draw(this->bbox);
+    if (drawBBox) window.draw(this->bbox);
 }
 
 void TetrisPiece::setShapes() {

@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Monomino.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TetrisPiece.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/GridController.hpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TetrominoTypes.hpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TetrisPiece.hpp" isTestSource="false" />
     </content>

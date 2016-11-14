@@ -6,5 +6,9 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 project(Tetris)
-add_executable(Tetris main.cpp Monomino.cpp TetrisPiece.cpp GridController.cpp)
+add_executable(Tetris main.cpp
+        Monomino.cpp Monomino.hpp
+        TetrisPiece.cpp TetrisPiece.hpp
+        GridController.cpp GridController.hpp
+        TetrominoTypes.hpp)
 target_link_libraries(Tetris -lsfml-graphics -lsfml-window -lsfml-system)

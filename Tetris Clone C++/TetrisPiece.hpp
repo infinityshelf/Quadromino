@@ -1,5 +1,5 @@
-#ifndef TETRISPIECE_H
-#define TETRISPIECE_H
+#ifndef TETRIS_TETRISPIECE_H
+#define TETRIS_TETRISPIECE_H
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
@@ -14,7 +14,6 @@ class TetrisPiece {
 private:
     bool grid[4][4];
     int gridSize[2];
-    static sf::RenderWindow * m_windowRef;
     static GridController * m_gridController;
     void setShapes();
     static TetrominoType type;
@@ -47,7 +46,7 @@ public:
     bool rotateClockwise();
     bool rotateCounterClockwise();
     void updatePosition(int col, int row);
-    void draw();
+    void drawToWindow(sf::RenderWindow &window);
     void setGridForType(TetrominoType tetrominoType);
     void setGridForType();
     void reset();

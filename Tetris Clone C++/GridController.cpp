@@ -12,7 +12,6 @@ int level = 0;
 bool last_clear_was_a_tetris = false;
 
 GridController * GridController::s_instance = nullptr;
-sf::RenderWindow * GridController::m_windowref = nullptr;
 
 
 GridController* GridController::instance() {
@@ -196,22 +195,14 @@ void GridController::loadGridFromFile() {
     delete[] gridString;
 }
 
-void GridController::provideWindow(sf::RenderWindow * window) {
-    this->m_windowref = window;
-}
-
-sf::RenderWindow * GridController::window_instance() {
-    return this->m_windowref;
-}
-
-void GridController::draw() {
+void GridController::drawToWindow(sf::RenderWindow &window) {
     this->checkRows();
     for (int y = 0; y < ROWS; ++y) {
         for (int x = 0; x < COLUMNS; ++x) {
             sf::RectangleShape shape = Monomino::rectangleShapeForType(this->grid[y][x]);
             shape.setPosition(x*pixels, y*pixels);
             if (this->grid[y][x] != TETROMINO_TYPE_NONE) {
-                this->m_windowref->draw(shape);
+                window.draw(shape);
             }
         }
     }
@@ -228,8 +219,8 @@ void GridController::draw() {
     this->scoreText.setString(scoreString);
     this->scoreText.setPosition((COLUMNS * 1.5f * pixels)-(this->scoreText.getLocalBounds().width/2), ROWS * pixels *0.25f);
     this->scoreText.setFillColor(sf::Color::White);
-    this->m_windowref->draw(this->scoreText);
-    this->m_windowref->draw(bbox);
+    window.draw(this->scoreText);
+    window.draw(bbox);
 }
 
 void GridController::checkRows() {

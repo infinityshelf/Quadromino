@@ -28,8 +28,6 @@ int main(int argc, char const *argv[]) {
     }
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     static GridController *mainGrid = GridController::instance();
-    mainGrid->provideWindow(&window);
-    //mainGrid->printGrid();
     if (load) {
         mainGrid->loadGridFromFile();
     }
@@ -126,8 +124,8 @@ int main(int argc, char const *argv[]) {
                 piece.moveDown();
             }
         }
-        piece.draw();
-        mainGrid->draw();
+        piece.drawToWindow(window);
+        mainGrid->drawToWindow(window);
         window.display();
     }
 

@@ -1,5 +1,5 @@
-#ifndef GRIDCONTROLLER_H
-#define GRIDCONTROLLER_H
+#ifndef TETRIS_GRIDCONTROLLER_H
+#define TETRIS_GRIDCONTROLLER_H
 #include "TetrisPiece.hpp"
 #include "TetrominoTypes.hpp"
 const int ROWS = 20;
@@ -16,7 +16,6 @@ class GridController {
 private:
     TetrominoType grid[ROWS][COLUMNS];
     static GridController *s_instance;
-    static sf::RenderWindow * m_windowref;
     GridController();
     GridController(GridController const&);
     void operator=(GridController const&);
@@ -29,10 +28,9 @@ private:
     sf::Text scoreText;
 public:
     ~GridController();
-    void draw();
+    void drawToWindow(sf::RenderWindow &window);
     static GridController* instance();
     sf::RenderWindow * window_instance();
-    void provideWindow(sf::RenderWindow * window);
     void printGrid();
     void setSpaceOccupied(int row, int col, TetrominoType type);
     bool isSpaceOccupied(int row, int col);

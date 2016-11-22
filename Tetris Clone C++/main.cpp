@@ -96,13 +96,19 @@ int main(int argc, char const *argv[]) {
                         piece.rotateCounterClockwise();
                     }
                     else if (event.key.code == sf::Keyboard::C) {
-                        piece.reset();
+                        if (debug) {
+                            piece.reset();
+                        }
                     }
                     else if (event.key.code == sf::Keyboard::Z) {
-                        mainGrid->saveGridToFile();
+                        if (debug) {
+                            mainGrid->saveGridToFile();
+                        }
                     }
                     else if (event.key.code == sf::Keyboard::X) {
-                        mainGrid->loadGridFromFile();
+                        if (debug) {
+                            mainGrid->loadGridFromFile();
+                        }
                     }
                 }
             } else if (event.type == sf::Event::KeyReleased) {
@@ -130,7 +136,6 @@ int main(int argc, char const *argv[]) {
         } else {
             difficultyFrame = 20;
         }
-        std::cout << "difficulty frame: " << difficultyFrame << std::endl;
         if (piece.frameCounter % difficultyFrame == difficultyFrame-1) {
             piece.frameCounter %= difficultyFrame;
             if (autoDrop) {

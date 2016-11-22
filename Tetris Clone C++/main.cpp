@@ -121,15 +121,13 @@ int main(int argc, char const *argv[]) {
         window.clear();
         unsigned int difficultyFrame;
         if (level < 20) {
-            difficultyFrame = 20 + (level * 2);
+            difficultyFrame = 20 + ((20-level) * 2);
         } else {
             difficultyFrame = 20;
         }
-        if (piece.frameCounter % difficultyFrame == difficultyFrame-1) {
-            piece.frameCounter %= difficultyFrame;
-            if (autoDrop) {
-                piece.moveDown();
-            }
+        piece.frameCounter %= difficultyFrame;
+        if (piece.frameCounter == difficultyFrame-1 && autoDrop) {
+            piece.moveDown();
         }
         piece.drawToWindow(window);
         mainGrid->drawToWindow(window);

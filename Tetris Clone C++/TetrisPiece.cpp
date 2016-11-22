@@ -165,7 +165,6 @@ bool TetrisPiece::rotateCounterClockwise() {
         }
         if (this->rotateFree(rotatedGrid, bounds, this->col, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col, this->row);
-            this->frameCounter = 0;
         }
         else if (this->rotateFree(rotatedGrid, bounds, this->col-1, this->row)) {
             this->setGrid(rotatedGrid, bounds, this->col-1, this->row);

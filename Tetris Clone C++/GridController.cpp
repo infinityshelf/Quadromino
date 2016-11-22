@@ -29,6 +29,11 @@ GridController::GridController() {
     this->scoreFont.loadFromFile(fontName);
     this->scoreText.setFont(this->scoreFont);
     this->scoreText.setCharacterSize(40);
+    sf::Rect<int> bannerRect = sf::Rect<int>(sf::Vector2<int>(200,200), sf::Vector2<int>(0,0));
+    this->bannerTexture.loadFromFile("TetrisBanner.png", bannerRect);
+    this->bannerSprite.setTexture(this->bannerTexture, false);
+    this->bannerSprite.setScale(0.15f,0.15f);
+    this->bannerSprite.setPosition(336,64);
 }
 
 GridController::~GridController() {}
@@ -221,6 +226,7 @@ void GridController::drawToWindow(sf::RenderWindow &window) {
     this->scoreText.setFillColor(sf::Color::White);
     window.draw(this->scoreText);
     window.draw(bbox);
+    window.draw(this->bannerSprite);
 }
 
 void GridController::checkRows() {

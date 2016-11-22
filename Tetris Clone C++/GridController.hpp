@@ -26,6 +26,8 @@ private:
     static TetrominoType typeForCharacter(char place);
     sf::Font scoreFont;
     sf::Text scoreText;
+    sf::Sprite bannerSprite;
+    sf::Texture bannerTexture;
 public:
     ~GridController();
     void drawToWindow(sf::RenderWindow &window);

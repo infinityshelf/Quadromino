@@ -55,7 +55,7 @@ int main(int argc, char const *argv[]) {
                 window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
-                } else if (event.key.code == sf::Keyboard::Left) {
+                if (event.key.code == sf::Keyboard::Left) {
                     piece.moveLeft();
                 }
                 else if (event.key.code == sf::Keyboard::Right) {
@@ -72,14 +72,7 @@ int main(int argc, char const *argv[]) {
                     // and then they press down
                 }
                 else if (event.key.code == sf::Keyboard::Up and canInstantDrop) {
-                    int y = piece.row;
-                    // move down
-                    piece.moveDown();
-                    while (y != piece.row) {
-                        // keep moving down if position is still changing
-                        y = piece.row;
-                        piece.moveDown();
-                    }
+                    piece.castDown(true);
                     // instantly lock
                     piece.lock();
                     canInstantDrop = false;

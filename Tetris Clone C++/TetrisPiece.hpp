@@ -49,6 +49,7 @@ public:
     void drawToWindow(sf::RenderWindow &window);
     void setGridForType(TetrominoType tetrominoType);
     void setGridForType();
+    int castDown(bool for_real);
     void reset();
     void moveToStartPosition();
 };

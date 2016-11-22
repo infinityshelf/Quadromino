@@ -29,14 +29,29 @@ void TetrisPiece::moveLeft() {
 
 void TetrisPiece::moveRight() {
     if (this->offsetFree(1, 0)) {
-        this->updatePosition(this->col+1, this->row+0);
+        this->updatePosition(this->col+1, this->row);
     }
 }
 
 void TetrisPiece::moveDown() {
     if (this->offsetFree(0, 1)) {
         this->updatePosition(this->col, this->row+1);
+    } else {
+        this->lock();
     }
+}
+
+int TetrisPiece::castDown(bool for_real) {
+    int index = 1;
+    std::cout << "right before loop in TetrisPiece::castDown" <<  std::endl;
+    while (this->offsetFree(0, index)) {
+        index++;
+    }
+    std::cout << "Made it out of the loop in TetrisPiece::castDown" <<  std::endl;
+    if (for_real) {
+        this->updatePosition(this->col, this->row + index);
+    }
+    return index;
 }
 
 bool TetrisPiece::rotateFree(bool newGrid[4][4], int bounds) {
@@ -196,45 +211,37 @@ bool TetrisPiece::rotateCounterClockwise() {
 }
 
 bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock) {
-    bool free = true;
     for (int col = 0; col < 4; col++) {
         for (int row = 0; row < 4; row++) {
             if (offsetGrid[row][col]) {
 
                 // if going past bottom row
                 if (this->row+row+1 >= ROWS and rowOff > 0) {
-                    free = false;
                     if (lock) this->lock();
-                    break;
+                    return false;
                 }
                 // if moving out of the grid left or right
                 if (this->col+col+colOff < 0 or this->col+col+colOff >= COLUMNS) {
-                    free = false;
-                    break;
+                    return false;
                 }
                 // these 2 may be able to be consolidated
                 //if the row is occupied
                 if (this->m_gridController->isSpaceOccupied(this->col+col+colOff, this->row+row)) {
-                    free = false;
-                    break;
+                    return false;
                 }
                 //if the col is occupied
                 if (this->m_gridController->isSpaceOccupied(this->col+col, this->row+row+rowOff)) {
-                    free = false;
                     if (lock) this->lock();
-                    break;
+                    return false;
                 }
             }
         }
-        if (!free) {
-            break;
-        }
     }
-    return free;
+    return true;
 }
 
 bool TetrisPiece::offsetFree(int colOff, int rowOff) {
-    return this->offsetFree(this->grid, colOff, rowOff, true);
+    return this->offsetFree(this->grid, colOff, rowOff, false);
 }
 
 void TetrisPiece::updatePosition(int col, int row) {
@@ -275,16 +282,21 @@ void TetrisPiece::lock() {
 }
 
 void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
-    int rect_x, rect_y;
-    const sf::Vector2<float> pos = shape.getPosition();
-    rect_x = (int) pos.x + dx;
-    rect_y = (int) pos.y + dy;
-    shape.setPosition(rect_x, rect_y);
+    shape.move(dx, dy);
 }
 
 void TetrisPiece::drawToWindow(sf::RenderWindow &window) {
+    int how_far = this->castDown(false);
+    std::cout << "cast down says how far = " << how_far << std::endl;
     for (int i = 0; i < 4; i++) {
         window.draw(this->rectShapes[i]);
+        sf::RectangleShape copy = this->rectShapes[i];
+        // auto pos = copy.getPosition();
+        copy.move(0, pixels*how_far);
+        copy.setFillColor(sf::Color(0x8f8f8f8f));
+        //copy.setOutlineColor(sf::Color(0x7F7F7FFF));
+        copy.setOutlineThickness(0);
+        window.draw(copy);
     }
     if (drawBBox) window.draw(this->bbox);
 }
@@ -304,7 +316,6 @@ void TetrisPiece::setShapes() {
     this->bbox.setSize(sf::Vector2f(this->gridSize[0] * pixels, this->gridSize[1] * pixels));
     this->bbox.setPosition(this->x, this->y);
     this->bbox.setFillColor(sf::Color(0xFFFFFF7F));
-    this->bbox.setOutlineColor(sf::Color(0xFFFFFFFF));
     this->bbox.setOutlineThickness(3);
 }
 

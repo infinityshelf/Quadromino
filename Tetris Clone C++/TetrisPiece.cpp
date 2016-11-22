@@ -51,10 +51,10 @@ bool TetrisPiece::rotateFree(bool newGrid[4][4], int bounds, int colOff, int row
         for (int x = 0; x < bounds; x++) {
             if (newGrid[y][x] == true) {
                 if (this->m_gridController->isSpaceOccupied(colOff+x, rowOff+y)
-                    || colOff+x < 0
-                    || colOff+x >= COLUMNS
-                    || rowOff+y < 0
-                    || rowOff+y >= ROWS) {
+                    or colOff+x < 0
+                    or colOff+x >= COLUMNS
+                    or rowOff+y < 0
+                    or rowOff+y >= ROWS) {
                     rotateFree = false;
                     break;
                 }
@@ -91,6 +91,7 @@ bool TetrisPiece::rotateClockwise() {
         if (width == height) {
             bounds = width;
         } else {
+            // general error
             return false;
         }
         bool rotatedGrid[4][4];
@@ -201,13 +202,13 @@ bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool
             if (offsetGrid[row][col]) {
 
                 // if going past bottom row
-                if (this->row+row+1 >= ROWS && rowOff > 0) {
+                if (this->row+row+1 >= ROWS and rowOff > 0) {
                     free = false;
                     if (lock) this->lock();
                     break;
                 }
                 // if moving out of the grid left or right
-                if (this->col+col+colOff < 0 || this->col+col+colOff >= COLUMNS) {
+                if (this->col+col+colOff < 0 or this->col+col+colOff >= COLUMNS) {
                     free = false;
                     break;
                 }
@@ -291,8 +292,8 @@ void TetrisPiece::drawToWindow(sf::RenderWindow &window) {
 void TetrisPiece::setShapes() {
     //this->setGridForType(this->type);
     int rect = 0;
-    for (int row = 0; row < 4 && rect < 4; row++) {
-        for (int col = 0; col < 4 && rect < 4; col++) {
+    for (int row = 0; row < 4 and rect < 4; row++) {
+        for (int col = 0; col < 4 and rect < 4; col++) {
             if (this->grid[row][col]) {
                 this->rectShapes[rect] = Monomino::rectangleShapeForType(this->type);
                 this->rectShapes[rect].setPosition(this->x+(col*pixels), this->y+(row*pixels));
@@ -355,10 +356,10 @@ void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
         for (int x = 0; x < 4; x++) {
             char gridChar = type[4*y + x];
             grid[y][x] = (gridChar == '@');
-            if (y == 0 && gridChar == 'x') {
+            if (y == 0 and gridChar == 'x') {
                 this->gridSize[0] = x;
             }
-            if (x == 0 && gridChar == 'y') {
+            if (x == 0 and gridChar == 'y') {
                 this->gridSize[1] = y;
             }
         }

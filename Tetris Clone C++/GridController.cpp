@@ -40,14 +40,14 @@ GridController::~GridController() {}
 
 bool GridController::isSpaceOccupied(int x, int y) {
     bool occupado = false;
-    if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
+    if (x >= 0 and x < COLUMNS and y >= 0 and y < ROWS) {
         occupado = (this->grid[y][x] != TETROMINO_TYPE_NONE);
     }
     return occupado;
 }
 
 void GridController::setSpaceOccupied(int x, int y, TetrominoType type) {
-    if (x >= 0 && x < COLUMNS && y >= 0 && y < ROWS) {
+    if (x >= 0 and x < COLUMNS and y >= 0 and y < ROWS) {
         this->grid[y][x] = type;
     }
 }
@@ -245,10 +245,10 @@ void GridController::checkRows() {
             this->shiftRowsAbove(row);
         }
     }
-    if (linesCleared == 4 && last_clear_was_a_tetris == true) {
+    if (linesCleared == 4 and last_clear_was_a_tetris == true) {
         score += 2000 * (level + 1);
         last_clear_was_a_tetris = true;
-    } else if (linesCleared == 4 && last_clear_was_a_tetris == false) {
+    } else if (linesCleared == 4 and last_clear_was_a_tetris == false) {
         score += 1000 * (level + 1);
         last_clear_was_a_tetris = true;
     } else if (linesCleared == 2) {

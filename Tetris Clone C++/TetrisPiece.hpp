@@ -17,9 +17,8 @@ private:
     static GridController * m_gridController;
     void setShapes();
     static TetrominoType type;
-    void updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape);
     bool offsetFree(int colOff, int rowOff);
-    bool offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock);
+    bool offsetFree(bool offsetGrid[4][4], int colOff, int rowOff);
 
     bool rotateFree(bool newGrid[4][4], int bounds);
     bool rotateFree(bool newGrid[4][4], int bounds, int colOff, int rowOff);
@@ -49,6 +48,7 @@ public:
     void drawToWindow(sf::RenderWindow &window);
     void setGridForType(TetrominoType tetrominoType);
     void setGridForType();
+    int castDown(bool for_real);
     void reset();
     void moveToStartPosition();
 };

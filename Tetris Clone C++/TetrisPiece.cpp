@@ -1,5 +1,14 @@
 #include "TetrisPiece.hpp"
 #include <random>
+#include <cassert>
+
+class bad_arguments: public std::exception
+{
+  virtual const char* what() const throw()
+  {
+    return "Function called with bad arguments";
+  }
+} bad_arg;
 
 const bool drawBBox = false;
 
@@ -29,14 +38,28 @@ void TetrisPiece::moveLeft() {
 
 void TetrisPiece::moveRight() {
     if (this->offsetFree(1, 0)) {
-        this->updatePosition(this->col+1, this->row+0);
+        this->updatePosition(this->col+1, this->row);
     }
 }
 
 void TetrisPiece::moveDown() {
     if (this->offsetFree(0, 1)) {
         this->updatePosition(this->col, this->row+1);
+    } else {
+        this->lock();
     }
+}
+
+int TetrisPiece::castDown(bool for_real) {
+    int index = 0;
+    // lookahead to avoid needing to do `index--`
+    while (this->offsetFree(0, index+1)) {
+        index++;
+    }
+    if (for_real) {
+        this->updatePosition(this->col, this->row + index);
+    }
+    return index;
 }
 
 bool TetrisPiece::rotateFree(bool newGrid[4][4], int bounds) {
@@ -51,10 +74,10 @@ bool TetrisPiece::rotateFree(bool newGrid[4][4], int bounds, int colOff, int row
         for (int x = 0; x < bounds; x++) {
             if (newGrid[y][x] == true) {
                 if (this->m_gridController->isSpaceOccupied(colOff+x, rowOff+y)
-                    || colOff+x < 0
-                    || colOff+x >= COLUMNS
-                    || rowOff+y < 0
-                    || rowOff+y >= ROWS) {
+                    or colOff+x < 0
+                    or colOff+x >= COLUMNS
+                    or rowOff+y < 0
+                    or rowOff+y >= ROWS) {
                     rotateFree = false;
                     break;
                 }
@@ -91,7 +114,7 @@ bool TetrisPiece::rotateClockwise() {
         if (width == height) {
             bounds = width;
         } else {
-            return false;
+            throw bad_arg;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -147,8 +170,7 @@ bool TetrisPiece::rotateCounterClockwise() {
         if (width == height) {
             bounds = width;
         } else {
-            std::cout << "ERR" << std::endl;
-            return false;
+            throw bad_arg;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -194,46 +216,31 @@ bool TetrisPiece::rotateCounterClockwise() {
     return rotated;
 }
 
-bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock) {
-    bool free = true;
-    for (int col = 0; col < 4; col++) {
-        for (int row = 0; row < 4; row++) {
+bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff) {
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 4; col++) {
             if (offsetGrid[row][col]) {
-
                 // if going past bottom row
-                if (this->row+row+1 >= ROWS && rowOff > 0) {
-                    free = false;
-                    if (lock) this->lock();
-                    break;
+                if (this->row+row+rowOff >= ROWS) {
+                    return false;
                 }
                 // if moving out of the grid left or right
-                if (this->col+col+colOff < 0 || this->col+col+colOff >= COLUMNS) {
-                    free = false;
-                    break;
+                if (this->col+col+colOff < 0 or this->col+col+colOff >= COLUMNS) {
+                    return false;
                 }
                 // these 2 may be able to be consolidated
                 //if the row is occupied
-                if (this->m_gridController->isSpaceOccupied(this->col+col+colOff, this->row+row)) {
-                    free = false;
-                    break;
-                }
-                //if the col is occupied
-                if (this->m_gridController->isSpaceOccupied(this->col+col, this->row+row+rowOff)) {
-                    free = false;
-                    if (lock) this->lock();
-                    break;
+                if (this->m_gridController->isSpaceOccupied(this->col+col+colOff, this->row+row+rowOff)) {
+                    return false;
                 }
             }
         }
-        if (!free) {
-            break;
-        }
     }
-    return free;
+    return true;
 }
 
 bool TetrisPiece::offsetFree(int colOff, int rowOff) {
-    return this->offsetFree(this->grid, colOff, rowOff, true);
+    return this->offsetFree(this->grid, colOff, rowOff);
 }
 
 void TetrisPiece::updatePosition(int col, int row) {
@@ -245,9 +252,9 @@ void TetrisPiece::updatePosition(int col, int row) {
     this->y = y;
     for (int i = 0; i < 4; i++) {
         // xr and yr are rectangle positions
-        this->updateRectUsingDelta(dx, dy, this->rectShapes[i]);
+        this->rectShapes[i].move(dx, dy);
     }
-    this->updateRectUsingDelta(dx, dy, this->bbox);
+    this->bbox.move(dx, dy);
 }
 
 void TetrisPiece::moveToStartPosition() {
@@ -273,17 +280,18 @@ void TetrisPiece::lock() {
     //this->m_gridController->printGrid();
 }
 
-void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
-    int rect_x, rect_y;
-    const sf::Vector2<float> pos = shape.getPosition();
-    rect_x = (int) pos.x + dx;
-    rect_y = (int) pos.y + dy;
-    shape.setPosition(rect_x, rect_y);
-}
-
 void TetrisPiece::drawToWindow(sf::RenderWindow &window) {
+    int how_far = this->castDown(false);
+    // std::cout << "cast down says how far = " << how_far << std::endl;
     for (int i = 0; i < 4; i++) {
         window.draw(this->rectShapes[i]);
+        sf::RectangleShape copy = this->rectShapes[i];
+        // auto pos = copy.getPosition();
+        copy.move(0, pixels*how_far);
+        copy.setFillColor(sf::Color(0x8f8f8f8f));
+        //copy.setOutlineColor(sf::Color(0x7F7F7FFF));
+        copy.setOutlineThickness(0);
+        window.draw(copy);
     }
     if (drawBBox) window.draw(this->bbox);
 }
@@ -291,8 +299,8 @@ void TetrisPiece::drawToWindow(sf::RenderWindow &window) {
 void TetrisPiece::setShapes() {
     //this->setGridForType(this->type);
     int rect = 0;
-    for (int row = 0; row < 4 && rect < 4; row++) {
-        for (int col = 0; col < 4 && rect < 4; col++) {
+    for (int row = 0; row < 4 and rect < 4; row++) {
+        for (int col = 0; col < 4 and rect < 4; col++) {
             if (this->grid[row][col]) {
                 this->rectShapes[rect] = Monomino::rectangleShapeForType(this->type);
                 this->rectShapes[rect].setPosition(this->x+(col*pixels), this->y+(row*pixels));
@@ -303,7 +311,6 @@ void TetrisPiece::setShapes() {
     this->bbox.setSize(sf::Vector2f(this->gridSize[0] * pixels, this->gridSize[1] * pixels));
     this->bbox.setPosition(this->x, this->y);
     this->bbox.setFillColor(sf::Color(0xFFFFFF7F));
-    this->bbox.setOutlineColor(sf::Color(0xFFFFFFFF));
     this->bbox.setOutlineThickness(3);
 }
 
@@ -355,10 +362,10 @@ void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
         for (int x = 0; x < 4; x++) {
             char gridChar = type[4*y + x];
             grid[y][x] = (gridChar == '@');
-            if (y == 0 && gridChar == 'x') {
+            if (y == 0 and gridChar == 'x') {
                 this->gridSize[0] = x;
             }
-            if (x == 0 && gridChar == 'y') {
+            if (x == 0 and gridChar == 'y') {
                 this->gridSize[1] = y;
             }
         }

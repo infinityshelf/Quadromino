@@ -49,67 +49,53 @@ int main(int argc, char const *argv[]) {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
+            if (event.type == sf::Event::Closed or (
+                    event.type == sf::Event::KeyPressed and (
+                        event.key.code == sf::Keyboard::Escape or
+                        event.key.code == sf::Keyboard::Q
+                    ))) {
                 if (save) {
                     mainGrid->saveGridToFile();
                 }
                 window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::Escape or event.key.code == sf::Keyboard::Q) {
-                    if (save) {
-                        mainGrid->saveGridToFile();
-                    }
-                    window.close();
-                } else {
-                    if (event.key.code == sf::Keyboard::Left) {
-                        piece.moveLeft();
-                    }
-                    else if (event.key.code == sf::Keyboard::Right) {
-                        piece.moveRight();
-                    }
-                    else if (event.key.code == sf::Keyboard::Down) {
-                        autoDrop = false;
-                        piece.moveDown();
-                        // frame counter to 0 to make it so that
-                        // when the player presses down and their piece moves down
-                        // it takes a second for the piece to move again automatically
-                        piece.frameCounter = 0;
-                    }
-                    else if (event.key.code == sf::Keyboard::Up && canInstantDrop) {
-                        int y = piece.row;
-                        // move down
-                        piece.moveDown();
-                        while (y != piece.row) {
-                            // keep moving down if position is still changing
-                            y = piece.row;
-                            piece.moveDown();
-                        }
-                        // instantly lock
-                        piece.lock();
-                        canInstantDrop = false;
-                    }
-                    else if (event.key.code == sf::Keyboard::D) {
-                        piece.rotateClockwise();
-                    }
-                    else if (event.key.code == sf::Keyboard::A) {
-                        piece.rotateCounterClockwise();
-                    }
-                    else if (event.key.code == sf::Keyboard::C) {
-                        if (debug) {
-                            piece.reset();
-                        }
-                    }
-                    else if (event.key.code == sf::Keyboard::Z) {
-                        if (debug) {
-                            mainGrid->saveGridToFile();
-                        }
-                    }
-                    else if (event.key.code == sf::Keyboard::X) {
-                        if (debug) {
-                            mainGrid->loadGridFromFile();
-                        }
-                    }
+                if (event.key.code == sf::Keyboard::Left) {
+                    piece.moveLeft();
+                }
+                else if (event.key.code == sf::Keyboard::Right) {
+                    piece.moveRight();
+                }
+                else if (event.key.code == sf::Keyboard::Down) {
+                    autoDrop = false;
+                    piece.moveDown();
+                    // frame counter to 0 to make it so that
+                    // when the player presses down and their piece moves down
+                    // it takes a second for the piece to move again automatically
+                    piece.frameCounter = 0;
+                    // although the player can still time it so that the autodrop happens
+                    // and then they press down
+                }
+                else if (event.key.code == sf::Keyboard::Up and canInstantDrop) {
+                    piece.castDown(true);
+                    // instantly lock
+                    piece.lock();
+                    canInstantDrop = false;
+                }
+                else if (event.key.code == sf::Keyboard::D) {
+                    piece.rotateClockwise();
+                }
+                else if (event.key.code == sf::Keyboard::A) {
+                    piece.rotateCounterClockwise();
+                }
+                else if (event.key.code == sf::Keyboard::C) {
+                    piece.reset();
+                }
+                else if (event.key.code == sf::Keyboard::Z) {
+                    mainGrid->saveGridToFile();
+                }
+                else if (event.key.code == sf::Keyboard::X) {
+                    mainGrid->loadGridFromFile();
                 }
             } else if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Down) {
@@ -136,11 +122,9 @@ int main(int argc, char const *argv[]) {
         } else {
             difficultyFrame = 20;
         }
-        if (piece.frameCounter % difficultyFrame == difficultyFrame-1) {
-            piece.frameCounter %= difficultyFrame;
-            if (autoDrop) {
-                piece.moveDown();
-            }
+        piece.frameCounter %= difficultyFrame;
+        if (piece.frameCounter == difficultyFrame-1 and autoDrop) {
+            piece.moveDown();
         }
         piece.drawToWindow(window);
         mainGrid->drawToWindow(window);

@@ -76,7 +76,7 @@ bool TetrisPiece::rotateFree(bool newGrid[4][4], int bounds, int colOff, int row
                 if (this->m_gridController->isSpaceOccupied(colOff+x, rowOff+y)
                     or colOff+x < 0
                     or colOff+x >= COLUMNS
-                    or rowOff+y < 0
+                    //or rowOff+y < 0
                     or rowOff+y >= ROWS) {
                     rotateFree = false;
                     break;

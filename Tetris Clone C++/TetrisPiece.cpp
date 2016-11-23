@@ -2,6 +2,14 @@
 #include <random>
 #include <cassert>
 
+class bad_arguments: public std::exception
+{
+  virtual const char* what() const throw()
+  {
+    return "Function called with bad arguments";
+  }
+} bad_arg;
+
 const bool drawBBox = false;
 
 GridController*     TetrisPiece::m_gridController =  nullptr;
@@ -43,14 +51,11 @@ void TetrisPiece::moveDown() {
 }
 
 int TetrisPiece::castDown(bool for_real) {
-    int index = 1;
-    std::cout << "right before loop in TetrisPiece::castDown" <<  std::endl;
-    assert(not this->offsetFree(0, ROWS + 20));
-    while (this->offsetFree(0, index)) {
+    int index = 0;
+    // lookahead to avoid needing to do `index--`
+    while (this->offsetFree(0, index+1)) {
         index++;
     }
-    index--;
-    std::cout << "Made it out of the loop in TetrisPiece::castDown" <<  std::endl;
     if (for_real) {
         this->updatePosition(this->col, this->row + index);
     }
@@ -109,8 +114,7 @@ bool TetrisPiece::rotateClockwise() {
         if (width == height) {
             bounds = width;
         } else {
-            // general error
-            return false;
+            throw bad_arg;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -166,8 +170,7 @@ bool TetrisPiece::rotateCounterClockwise() {
         if (width == height) {
             bounds = width;
         } else {
-            std::cout << "ERR" << std::endl;
-            return false;
+            throw bad_arg;
         }
         bool rotatedGrid[4][4];
         bool transposedGrid[4][4];
@@ -213,13 +216,12 @@ bool TetrisPiece::rotateCounterClockwise() {
     return rotated;
 }
 
-bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock) {
+bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff) {
     for (int row = 0; row < 4; row++) {
         for (int col = 0; col < 4; col++) {
             if (offsetGrid[row][col]) {
                 // if going past bottom row
                 if (this->row+row+rowOff >= ROWS) {
-                    if (lock) this->lock();
                     return false;
                 }
                 // if moving out of the grid left or right
@@ -238,7 +240,7 @@ bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool
 }
 
 bool TetrisPiece::offsetFree(int colOff, int rowOff) {
-    return this->offsetFree(this->grid, colOff, rowOff, false);
+    return this->offsetFree(this->grid, colOff, rowOff);
 }
 
 void TetrisPiece::updatePosition(int col, int row) {
@@ -250,9 +252,9 @@ void TetrisPiece::updatePosition(int col, int row) {
     this->y = y;
     for (int i = 0; i < 4; i++) {
         // xr and yr are rectangle positions
-        this->updateRectUsingDelta(dx, dy, this->rectShapes[i]);
+        this->rectShapes[i].move(dx, dy);
     }
-    this->updateRectUsingDelta(dx, dy, this->bbox);
+    this->bbox.move(dx, dy);
 }
 
 void TetrisPiece::moveToStartPosition() {
@@ -278,13 +280,9 @@ void TetrisPiece::lock() {
     //this->m_gridController->printGrid();
 }
 
-void TetrisPiece::updateRectUsingDelta(int dx, int dy, sf::RectangleShape &shape) {
-    shape.move(dx, dy);
-}
-
 void TetrisPiece::drawToWindow(sf::RenderWindow &window) {
     int how_far = this->castDown(false);
-    std::cout << "cast down says how far = " << how_far << std::endl;
+    // std::cout << "cast down says how far = " << how_far << std::endl;
     for (int i = 0; i < 4; i++) {
         window.draw(this->rectShapes[i]);
         sf::RectangleShape copy = this->rectShapes[i];

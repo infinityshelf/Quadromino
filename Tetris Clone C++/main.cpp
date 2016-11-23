@@ -27,7 +27,12 @@ int main(int argc, char const *argv[]) {
         return 0;
     }
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
-    window.setIcon(128,128, teris_logo_image.pixel_data);
+    sf::Image icon;
+    if (icon.loadFromFile("TLogo.png")) {
+        window.setIcon(1024,1024, icon.getPixelsPtr());
+    } else {
+        std::cout << "unable to open file";
+    }
     static GridController *mainGrid = GridController::instance();
     if (load) {
         mainGrid->loadGridFromFile();

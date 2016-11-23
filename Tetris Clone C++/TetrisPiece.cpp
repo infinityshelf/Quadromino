@@ -1,5 +1,6 @@
 #include "TetrisPiece.hpp"
 #include <random>
+#include <cassert>
 
 const bool drawBBox = false;
 
@@ -44,9 +45,11 @@ void TetrisPiece::moveDown() {
 int TetrisPiece::castDown(bool for_real) {
     int index = 1;
     std::cout << "right before loop in TetrisPiece::castDown" <<  std::endl;
+    assert(not this->offsetFree(0, ROWS + 20));
     while (this->offsetFree(0, index)) {
         index++;
     }
+    index--;
     std::cout << "Made it out of the loop in TetrisPiece::castDown" <<  std::endl;
     if (for_real) {
         this->updatePosition(this->col, this->row + index);
@@ -211,12 +214,11 @@ bool TetrisPiece::rotateCounterClockwise() {
 }
 
 bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool lock) {
-    for (int col = 0; col < 4; col++) {
-        for (int row = 0; row < 4; row++) {
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 4; col++) {
             if (offsetGrid[row][col]) {
-
                 // if going past bottom row
-                if (this->row+row+1 >= ROWS and rowOff > 0) {
+                if (this->row+row+rowOff >= ROWS) {
                     if (lock) this->lock();
                     return false;
                 }
@@ -226,12 +228,7 @@ bool TetrisPiece::offsetFree(bool offsetGrid[4][4], int colOff, int rowOff, bool
                 }
                 // these 2 may be able to be consolidated
                 //if the row is occupied
-                if (this->m_gridController->isSpaceOccupied(this->col+col+colOff, this->row+row)) {
-                    return false;
-                }
-                //if the col is occupied
-                if (this->m_gridController->isSpaceOccupied(this->col+col, this->row+row+rowOff)) {
-                    if (lock) this->lock();
+                if (this->m_gridController->isSpaceOccupied(this->col+col+colOff, this->row+row+rowOff)) {
                     return false;
                 }
             }

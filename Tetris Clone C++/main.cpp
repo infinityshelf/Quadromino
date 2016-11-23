@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
-#include "TLogo128.h"
+
 using namespace std;
 int main(int argc, char const *argv[]) {
     bool save = false;

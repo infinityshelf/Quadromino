@@ -372,16 +372,19 @@ void TetrisPiece::setGridForType(TetrominoType tetrominoType) {
     }
 }
 
-void TetrisPiece::reset() {
+void TetrisPiece::resetWithType(TetrominoType type) {
+    this->setType(type);
+    this->setGridForType(type);
+    this->setShapes();
+    this->moveToStartPosition();
     this->locked = false;
+}
+
+void TetrisPiece::reset() {
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(1,100);
     int intType = (int) dist(mt);
     intType = intType % 7 + 1;
-    TetrominoType newType = static_cast<TetrominoType>(intType);
-    this->setType(newType);
-    this->setGridForType(newType);
-    this->setShapes();
-    this->moveToStartPosition();
+    this->resetWithType(static_cast<TetrominoType>(intType));
 }

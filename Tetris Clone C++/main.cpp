@@ -40,10 +40,12 @@ int main(int argc, char const *argv[]) {
     bool autoDrop = true;
     window.setFramerateLimit(60);
     TetrisPiece piece;
+    TetrominoType held;
     piece.reset();
     piece.frameCounter = 0;
     bool spawnPiece = false;
     bool canInstantDrop = true;
+    bool canHold = true;
     while (window.isOpen()) {
         piece.frameCounter++;
 
@@ -97,6 +99,19 @@ int main(int argc, char const *argv[]) {
                 else if (event.key.code == sf::Keyboard::X) {
                     mainGrid->loadGridFromFile();
                 }
+                else if (event.key.code == sf::Keyboard::E and canHold) {
+                    if (held == TETROMINO_TYPE_NONE) {
+                        held = piece.getType();
+                        piece.reset();
+                        //just to make sure
+                        spawnPiece = false;
+                    } else {
+                        auto temp = piece.getType();
+                        piece.resetWithType(held);
+                        held = temp;
+                        canHold = false;
+                    }
+                }
             } else if (event.type == sf::Event::KeyReleased) {
                 if (event.key.code == sf::Keyboard::Down) {
                     autoDrop = true;
@@ -114,6 +129,7 @@ int main(int argc, char const *argv[]) {
             //piece.printGrid();
             piece.reset();
             spawnPiece = false;
+            canHold = true;
         }
         window.clear();
         unsigned int difficultyFrame;

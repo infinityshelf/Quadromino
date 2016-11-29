@@ -29,6 +29,7 @@ private:
     sf::Sprite bannerSprite;
     sf::Texture bannerTexture;
 public:
+    TetrominoType heldType;
     ~GridController();
     void drawToWindow(sf::RenderWindow &window);
     static GridController* instance();

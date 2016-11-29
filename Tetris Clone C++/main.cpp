@@ -40,7 +40,6 @@ int main(int argc, char const *argv[]) {
     bool autoDrop = true;
     window.setFramerateLimit(60);
     TetrisPiece piece;
-    TetrominoType held;
     piece.reset();
     piece.frameCounter = 0;
     bool spawnPiece = false;
@@ -100,15 +99,15 @@ int main(int argc, char const *argv[]) {
                     mainGrid->loadGridFromFile();
                 }
                 else if (event.key.code == sf::Keyboard::E and canHold) {
-                    if (held == TETROMINO_TYPE_NONE) {
-                        held = piece.getType();
+                    if (mainGrid->heldType == TETROMINO_TYPE_NONE) {
+                        mainGrid->heldType = piece.getType();
                         piece.reset();
                         //just to make sure
                         spawnPiece = false;
                     } else {
                         auto temp = piece.getType();
-                        piece.resetWithType(held);
-                        held = temp;
+                        piece.resetWithType(mainGrid->heldType);
+                        mainGrid->heldType = temp;
                         canHold = false;
                     }
                 }

@@ -164,14 +164,16 @@ void GridController::saveGridToFile() {
     size_t length = ROWS * COLUMNS;
     char *gridString = new char[length];
     for (int i = 0; i < (int) length; i++) {
-        gridString[i] = GridController::characterForType(this->grid[0][i]);
+        gridString[i] = characterForType(this->grid[0][i]);
     }
+    char stupidvar = characterForType(this->heldType);
     if (fp != NULL) {
         fseek(fp, SEEK_SET, 0);
         fwrite(gridString, sizeof(char), length, fp);
         fwrite(&score, sizeof(score), 1, fp);
         fwrite(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
         fwrite(&level, sizeof(level), 1, fp);
+        fwrite(&stupidvar, sizeof(stupidvar), 1, fp);
         fclose(fp);
     } else {
         std::cout << "COULD NOT OPEN FILE: " << fileName << "\007" << std::endl;
@@ -183,14 +185,17 @@ void GridController::loadGridFromFile() {
     FILE *fp = fopen(fileName, "rb");
     size_t length = ROWS * COLUMNS;
     char *gridString = new char[length];
+    char stupidvar;
     if (fp != NULL) {
         fseek(fp, SEEK_SET, 0);
         fread(gridString, sizeof(char), length, fp);
         fread(&score, sizeof(score), 1, fp);
         fread(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
         fread(&level, sizeof(level), 1, fp);
+        fread(&stupidvar, sizeof(stupidvar), 1, fp);
+        this->heldType = typeForCharacter(stupidvar);
         for (int i = 0; i < (int) length; i++) {
-            this->grid[0][i] = GridController::typeForCharacter(gridString[i]);
+            this->grid[0][i] = typeForCharacter(gridString[i]);
         }
         //this->printGrid();
         fclose(fp);

@@ -50,6 +50,7 @@ public:
     void setGridForType();
     int castDown(bool for_real);
     void reset();
+    void resetWithType(TetrominoType type);
     void moveToStartPosition();
 };
 #endif

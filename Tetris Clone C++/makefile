@@ -2,11 +2,10 @@ CFLAGS = -std=c++14 -Wall -Winit-self -Wextra -Weffc++ -pedantic -Wredundant-dec
 all:
 	make run
 
-run:
-	make binary
+run: Tetris
 	./Tetris
 
-binary: main.o TetrisPiece.o GridController.o Monomino.o
+Tetris: main.o TetrisPiece.o GridController.o Monomino.o
 	g++ $(CFLAGS) main.o TetrisPiece.o GridController.o Monomino.o -o Tetris -lsfml-graphics -lsfml-window -lsfml-system
 
 main.o: main.cpp TetrisPiece.hpp GridController.hpp TetrominoTypes.hpp Monomino.hpp
@@ -23,8 +22,8 @@ Monomino.o: Monomino.cpp Monomino.hpp TetrisPiece.hpp TetrominoTypes.hpp
 
 clean:
 	rm *.o
-	rm *.exe
+	rm Tetris
 
 recompile:
 	make clean
-	make wo-run
+	make Tetris

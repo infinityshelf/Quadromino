@@ -6,13 +6,13 @@ const bool debug = false;
 const int pixels = 32;
 const char fileName[] = "tetris.dat";
 const char fontName[] = "sansation.ttf";
+
+GridController * GridController::s_instance = nullptr;
+
 int totalLinesCleared = 0;
 int score = 0;
 int level = 0;
 bool last_clear_was_a_tetris = false;
-
-GridController * GridController::s_instance = nullptr;
-
 
 GridController* GridController::instance() {
     static GridController instance = GridController();
@@ -159,54 +159,7 @@ void GridController::printGrid() {
     std::cout << std::endl;
 }
 
-void GridController::saveGridToFile() {
-    FILE *fp = fopen(fileName, "wb");
-    size_t length = ROWS * COLUMNS;
-    char *gridString = new char[length];
-    for (int i = 0; i < (int) length; i++) {
-        gridString[i] = characterForType(this->grid[0][i]);
-    }
-    char stupidvar = characterForType(this->heldType);
-    if (fp != NULL) {
-        fseek(fp, SEEK_SET, 0);
-        fwrite(gridString, sizeof(char), length, fp);
-        fwrite(&score, sizeof(score), 1, fp);
-        fwrite(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
-        fwrite(&level, sizeof(level), 1, fp);
-        fwrite(&stupidvar, sizeof(stupidvar), 1, fp);
-        fclose(fp);
-    } else {
-        std::cout << "COULD NOT OPEN FILE: " << fileName << "\007" << std::endl;
-    }
-    delete[] gridString;
-}
-
-void GridController::loadGridFromFile() {
-    FILE *fp = fopen(fileName, "rb");
-    size_t length = ROWS * COLUMNS;
-    char *gridString = new char[length];
-    char stupidvar;
-    if (fp != NULL) {
-        fseek(fp, SEEK_SET, 0);
-        fread(gridString, sizeof(char), length, fp);
-        fread(&score, sizeof(score), 1, fp);
-        fread(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
-        fread(&level, sizeof(level), 1, fp);
-        fread(&stupidvar, sizeof(stupidvar), 1, fp);
-        this->heldType = typeForCharacter(stupidvar);
-        for (int i = 0; i < (int) length; i++) {
-            this->grid[0][i] = typeForCharacter(gridString[i]);
-        }
-        //this->printGrid();
-        fclose(fp);
-    } else {
-        std::cout << "COULD NOT OPEN FILE: " << fileName <<  "\007" << std::endl;
-    }
-    delete[] gridString;
-}
-
 void GridController::drawToWindow(sf::RenderWindow &window) {
-    this->checkRows();
     for (int y = 0; y < ROWS; ++y) {
         for (int x = 0; x < COLUMNS; ++x) {
             sf::RectangleShape shape = Monomino::rectangleShapeForType(this->grid[y][x]);
@@ -284,6 +237,3 @@ void GridController::shiftRowsAbove(int clearedRow) {
         }
     }
 }
-
-
-

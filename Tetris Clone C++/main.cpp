@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
+#include <cstring>
 
 using namespace std;
 int main(int argc, char const *argv[]) {
@@ -13,11 +14,11 @@ int main(int argc, char const *argv[]) {
     const char saveFlag[] = {"-save"};
     if (argc == 3) {
         for (int i = 1; i < argc; i++) {
-            if (std::strncmp(argv[i],saveFlag, 6) == 0) {
+            if (strncmp(argv[i],saveFlag, 6) == 0) {
                 std::cout << "Saving" << std::endl;
                 save = true;
             }
-            if (std::strncmp(argv[i],loadFlag, 6) == 0) {
+            if (strncmp(argv[i],loadFlag, 6) == 0) {
                 std::cout << "Loading" << std::endl;
                 load = true;
             }

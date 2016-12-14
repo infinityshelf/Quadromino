@@ -19,7 +19,7 @@ GridController* GridController::instance() {
     return &instance;
 }
 
-GridController::GridController() {
+GridController::GridController(): scoreFont(sf::Font()), scoreText(sf::Text()), bannerSprite(sf::Sprite()), bannerTexture(sf::Texture()), heldType(TETROMINO_TYPE_NONE) {
     totalLinesCleared = 0;
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {
@@ -228,7 +228,7 @@ void GridController::drawToWindow(sf::RenderWindow &window) {
     sprintf(scoreString, "LEVEL: %d\nLINES: %d\nSCORE: %d", level, totalLinesCleared, score);
     this->scoreText.setString(scoreString);
     this->scoreText.setPosition((COLUMNS * 1.5f * pixels)-(this->scoreText.getLocalBounds().width/2), ROWS * pixels *0.25f);
-    this->scoreText.setFillColor(sf::Color::White);
+    this->scoreText.setColor(sf::Color::White);
     window.draw(this->scoreText);
     window.draw(bbox);
     window.draw(this->bannerSprite);

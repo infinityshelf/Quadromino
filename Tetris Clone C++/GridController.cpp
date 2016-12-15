@@ -12,14 +12,18 @@ int level = 0;
 bool last_clear_was_a_tetris = false;
 
 GridController * GridController::s_instance = nullptr;
-
+sf::Font GridController::scoreFont = sf::Font();
+sf::Text GridController::scoreText = sf::Text();
+sf::Sprite GridController::bannerSprite = sf::Sprite();
+sf::Texture GridController::bannerTexture = sf::Texture();
+TetrominoType GridController::heldType = TetrominoType();
 
 GridController* GridController::instance() {
     static GridController instance = GridController();
     return &instance;
 }
 
-GridController::GridController(): scoreFont(sf::Font()), scoreText(sf::Text()), bannerSprite(sf::Sprite()), bannerTexture(sf::Texture()), heldType(TETROMINO_TYPE_NONE) {
+GridController::GridController() {
     totalLinesCleared = 0;
     for (int y = 0; y < ROWS; y++) {
         for (int x = 0; x < COLUMNS; x++) {

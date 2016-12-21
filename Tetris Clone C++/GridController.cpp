@@ -228,7 +228,7 @@ void GridController::drawToWindow(sf::RenderWindow &window) {
     sprintf(scoreString, "LEVEL: %d\nLINES: %d\nSCORE: %d", level, totalLinesCleared, score);
     this->scoreText.setString(scoreString);
     this->scoreText.setPosition((COLUMNS * 1.5f * pixels)-(this->scoreText.getLocalBounds().width/2), ROWS * pixels *0.25f);
-    this->scoreText.setColor(sf::Color::White);
+    this->scoreText.setFillColor(sf::Color::White);
     window.draw(this->scoreText);
     window.draw(bbox);
     window.draw(this->bannerSprite);

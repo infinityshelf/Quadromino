@@ -24,12 +24,12 @@ private:
     void shiftRowsAbove(int clearedRow);
     static char characterForType(TetrominoType type);
     static TetrominoType typeForCharacter(char place);
-    sf::Font scoreFont;
-    sf::Text scoreText;
-    sf::Sprite bannerSprite;
-    sf::Texture bannerTexture;
+    static sf::Font scoreFont;
+    static sf::Text scoreText;
+    static sf::Sprite bannerSprite;
+    static sf::Texture bannerTexture;
 public:
-    TetrominoType heldType;
+    static TetrominoType heldType;
     ~GridController();
     void drawToWindow(sf::RenderWindow &window);
     static GridController* instance();

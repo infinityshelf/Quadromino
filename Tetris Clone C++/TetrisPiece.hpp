@@ -2,6 +2,7 @@
 #define TETRIS_TETRISPIECE_H
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+//#include <SFML/Text.hpp>
 #include "GridController.hpp"
 #include "Grids.hpp"
 #include "Monomino.hpp"

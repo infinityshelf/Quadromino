@@ -12,7 +12,11 @@ int level = 0;
 bool last_clear_was_a_tetris = false;
 
 GridController * GridController::s_instance = nullptr;
-
+sf::Font GridController::scoreFont = sf::Font();
+sf::Text GridController::scoreText = sf::Text();
+sf::Sprite GridController::bannerSprite = sf::Sprite();
+sf::Texture GridController::bannerTexture = sf::Texture();
+TetrominoType GridController::heldType = TetrominoType();
 
 GridController* GridController::instance() {
     static GridController instance = GridController();

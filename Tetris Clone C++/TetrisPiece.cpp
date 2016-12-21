@@ -1,6 +1,7 @@
 #include "TetrisPiece.hpp"
 #include <random>
 #include <cassert>
+#include <cstring>
 
 class bad_arguments: public std::exception
 {

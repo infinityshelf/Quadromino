@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
+#include <cstring>
 
 using namespace std;
 int main(int argc, char const *argv[]) {
@@ -28,11 +29,11 @@ int main(int argc, char const *argv[]) {
     }
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
     sf::Image icon;
-    if (icon.loadFromFile("TLogo.png")) {
-        window.setIcon(1024,1024, icon.getPixelsPtr());
-    } else {
-        std::cout << "unable to open file";
-    }
+    // if (icon.loadFromFile("TLogo.png")) {
+    //     window.setIcon(1024,1024, icon.getPixelsPtr());
+    // } else {
+    //     std::cout << "unable to open file";
+    // }
     static GridController *mainGrid = GridController::instance();
     if (load) {
         mainGrid->loadGridFromFile();

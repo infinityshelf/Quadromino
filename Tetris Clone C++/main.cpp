@@ -5,6 +5,63 @@
 #include "GridController.hpp"
 #include "TetrisPiece.hpp"
 
+bool spawnPiece = false;
+bool canInstantDrop = true;
+bool canHold = true;
+bool autoDrop = true;
+
+TetrominoType heldType = TETROMINO_TYPE_NONE;
+
+
+void saveGridToFile() {
+    FILE *fp = fopen(fileName, "wb");
+    size_t length = ROWS * COLUMNS;
+    char *gridString = new char[length];
+    GridController* instance = GridController::instance();
+    for (int i = 0; i < (int) length; i++) {
+        gridString[i] = GridController::characterForType(instance->grid[0][i]);
+    }
+    char stupidvar = GridController::characterForType(heldType);
+    if (fp != NULL) {
+        fseek(fp, SEEK_SET, 0);
+        fwrite(gridString, sizeof(char), length, fp);
+        fwrite(&score, sizeof(score), 1, fp);
+        fwrite(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
+        fwrite(&level, sizeof(level), 1, fp);
+        fwrite(&stupidvar, sizeof(stupidvar), 1, fp);
+        fclose(fp);
+    } else {
+        std::cout << "COULD NOT OPEN FILE: " << fileName << "\007" << std::endl;
+    }
+    delete[] gridString;
+}
+
+void loadGridFromFile() {
+    FILE *fp = fopen(fileName, "rb");
+    size_t length = ROWS * COLUMNS;
+    char *gridString = new char[length];
+    GridController* instance = GridController::instance();
+    char stupidvar;
+    if (fp != NULL) {
+        fseek(fp, SEEK_SET, 0);
+        fread(gridString, sizeof(char), length, fp);
+        fread(&score, sizeof(score), 1, fp);
+        fread(&totalLinesCleared, sizeof(totalLinesCleared), 1, fp);
+        fread(&level, sizeof(level), 1, fp);
+        fread(&stupidvar, sizeof(stupidvar), 1, fp);
+        heldType = GridController::typeForCharacter(stupidvar);
+        for (int i = 0; i < (int) length; i++) {
+            instance->grid[0][i] = GridController::typeForCharacter(gridString[i]);
+        }
+        //this->printGrid();
+        fclose(fp);
+    } else {
+        std::cout << "COULD NOT OPEN FILE: " << fileName <<  "\007" << std::endl;
+    }
+    delete[] gridString;
+}
+
+
 using namespace std;
 int main(int argc, char const *argv[]) {
     bool save = false;
@@ -27,24 +84,22 @@ int main(int argc, char const *argv[]) {
         return 0;
     }
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Tetris");
+    window.setFramerateLimit(60);
+
     sf::Image icon;
     if (icon.loadFromFile("TLogo.png")) {
         window.setIcon(1024,1024, icon.getPixelsPtr());
     } else {
         std::cout << "unable to open file";
     }
+
+
     static GridController *mainGrid = GridController::instance();
     if (load) {
-        mainGrid->loadGridFromFile();
+        loadGridFromFile();
     }
-    bool autoDrop = true;
-    window.setFramerateLimit(60);
     TetrisPiece piece;
     piece.reset();
-    piece.frameCounter = 0;
-    bool spawnPiece = false;
-    bool canInstantDrop = true;
-    bool canHold = true;
     while (window.isOpen()) {
         piece.frameCounter++;
 
@@ -56,7 +111,7 @@ int main(int argc, char const *argv[]) {
                         event.key.code == sf::Keyboard::Q
                     ))) {
                 if (save) {
-                    mainGrid->saveGridToFile();
+                    saveGridToFile();
                 }
                 window.close();
             }
@@ -93,21 +148,21 @@ int main(int argc, char const *argv[]) {
                     piece.reset();
                 }
                 else if (event.key.code == sf::Keyboard::Z) {
-                    mainGrid->saveGridToFile();
+                    saveGridToFile();
                 }
                 else if (event.key.code == sf::Keyboard::X) {
-                    mainGrid->loadGridFromFile();
+                    loadGridFromFile();
                 }
                 else if (event.key.code == sf::Keyboard::E and canHold) {
-                    if (mainGrid->heldType == TETROMINO_TYPE_NONE) {
-                        mainGrid->heldType = piece.getType();
+                    if (heldType == TETROMINO_TYPE_NONE) {
+                        heldType = piece.getType();
                         piece.reset();
                         //just to make sure
                         spawnPiece = false;
                     } else {
                         auto temp = piece.getType();
-                        piece.resetWithType(mainGrid->heldType);
-                        mainGrid->heldType = temp;
+                        piece.resetWithType(heldType);
+                        heldType = temp;
                         canHold = false;
                     }
                 }
@@ -142,6 +197,7 @@ int main(int argc, char const *argv[]) {
             piece.moveDown();
         }
         piece.drawToWindow(window);
+        mainGrid->checkRows();
         mainGrid->drawToWindow(window);
         window.display();
     }
